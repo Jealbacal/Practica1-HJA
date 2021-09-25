@@ -48,6 +48,8 @@ public class ap2 {
 				int number_of_c_cards = Integer.parseInt(act.substring(5, 6));
 				
 				//Metodos que leen las cartas de sus strings derivados de act.
+				// Va a hacer falta un merge de manos para hacer las combis.
+				// o otra forma de hacerlo xD
 				mano h_cards = read_cards(s_h_cards);
 				mano c_cards = read_cards(s_c_Cards);
 				
