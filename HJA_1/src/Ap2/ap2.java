@@ -50,6 +50,9 @@ public class ap2 {
 				//Metodos que leen las cartas de sus strings derivados de act.
 				// Va a hacer falta un merge de manos para hacer las combis.
 				// o otra forma de hacerlo xD
+				
+				//h_cards = hole_cards = tus cartas
+				//c_cards = community_cards = las cartas de la mesa
 				mano h_cards = read_cards(s_h_cards);
 				mano c_cards = read_cards(s_c_Cards);
 				
