@@ -1,15 +1,14 @@
-package Ap3;
+package Ap2;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
+import java.io.*;
 
-public class ap3 {
+
+public class ap2 {
 
 	public String in;
 	public String out;
 	
-	public ap3(String in, String out) {
+	public ap2(String in, String out) {
 		this.in = in;
 		this.out = out;
 		
