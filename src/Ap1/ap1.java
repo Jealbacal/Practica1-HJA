@@ -56,7 +56,7 @@ public class ap1 {
 		ArrayList<Ranking> comb = new ArrayList<>();
 
 		while(i<mano.cartas.size()-1){
-//miramos segun sea pareja y vamos mirando hacia delante si es trio o poker y lo guardamso en el string para mostrarlo y adelantamos la i
+        //miramos segun sea pareja y vamos mirando hacia delante si es trio o poker y lo guardamso en el string para mostrarlo y adelantamos la i
 			if(i+1<mano.cartas.size() &&mano.cartas.get(i).getValor()==mano.cartas.get(i+1).getValor()  ) {
 				//me guardo si hay pareja y con par1 veo si hay mas de 1 para poner doble pareja
 
@@ -156,7 +156,7 @@ public class ap1 {
 
 
 
-		try (BufferedWriter writer = new BufferedWriter(new FileWriter(this.out))){
+		try (BufferedWriter writer = new BufferedWriter(new FileWriter(this.out,true))){
 
 			writer.write(mano.toString() );
 			writer.append("\n");
@@ -226,9 +226,6 @@ public class ap1 {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-
-
-
 
 	}
 

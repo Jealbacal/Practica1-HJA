@@ -31,7 +31,7 @@ public class mano  {
     @Override
     public String toString() {
         String aux = new String();
-        for(int i = 0; i < cartas.size()-1 ;++i)
+        for(int i = 0; i < cartas.size() ;++i)
             aux += cartas.get(i).toString();
         return aux;
     }
