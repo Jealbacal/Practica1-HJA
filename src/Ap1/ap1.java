@@ -46,6 +46,7 @@ public class ap1 {
 		mano.cartas.sort(carta::compareTo);
 		int i=0;
 		int j=0;
+		int hueco=0;
 		int par1=0;
 		int pColor=5;
 		int pEscalera=0;
@@ -107,16 +108,29 @@ public class ap1 {
 			//Esta mal
 			//Miramos si los valores solo tienen una diferencia de 1 entre si para comprobar si ahy escalera y guradamos el valor de i para saber por donde seria
 			//el draw y con pEscalera me aseguro que solo falta una carta para hacer la escalera
-			if(mano.cartas.get(j).getValor()!=mano.cartas.get(j+1).getValor()-1 && !comb.contains(Ranking.PAIR)) {
+			if(mano.cartas.get(j).getValor()!=mano.cartas.get(j+1).getValor()-1 ) {
 
 				straight = false;
-				pEscalera++;
-				almacenai=i;
 
+				if ((mano.cartas.get(j+1).getValor() - mano.cartas.get(j ).getValor()) == 2) {
+					hueco++;
+
+				}
+				else if(hueco==1 && i==4  ){
+					hueco++;
+					pEscalera=1;
+
+				}
+				else{
+
+					pEscalera++;
+					almacenai=j;
+				}
 			}
 
 			//caso especial del 'A' con la escalera '2,3,4,5' //
 			if(mano.cartas.get(j).getValor()==5 && mano.cartas.get(j+1).getValor()==14 && straight){
+
 				straight=true;
 				pEscalera=0;
 				almacenai=0;
@@ -204,12 +218,12 @@ public class ap1 {
 			}
 
 			if(pEscalera==1){
-				if(almacenai==1) {
+				if(almacenai==0) {
 					writer.write("-Draw: Straight Open");
 					writer.append("\n");
 				}
 
-				else if(almacenai==5) {
+				else if(almacenai==3) {
 					writer.write("-Draw: Straight Ended" );
 					writer.append("\n");
 				}
