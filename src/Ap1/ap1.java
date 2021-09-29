@@ -52,7 +52,7 @@ public class ap1 {
 		int pEscalera=0;
 		int almacenai=0;
 		String ganadora="";
-		boolean straight=true,color=true;
+		boolean straight=true,color=true,nose=false;
 		Ranking best;
 		ArrayList<Ranking> comb = new ArrayList<>();
 
@@ -114,11 +114,15 @@ public class ap1 {
 
 				if ((mano.cartas.get(j+1).getValor() - mano.cartas.get(j ).getValor()) == 2) {
 					hueco++;
+					pEscalera++;
+					almacenai=j-1;
 
 				}
-				else if(hueco==1 && i==4  ){
+				else if(hueco==1 && j==3  ){
 					hueco++;
-					pEscalera=1;
+					//pEscalera=1;
+					pEscalera++;
+					almacenai=j-1;
 
 				}
 				else{
@@ -129,7 +133,7 @@ public class ap1 {
 			}
 
 			//caso especial del 'A' con la escalera '2,3,4,5' //
-			if(mano.cartas.get(j).getValor()==5 && mano.cartas.get(j+1).getValor()==14 && straight){
+			if(mano.cartas.get(j).getValor()==5 && mano.cartas.get(j+1).getValor()==14 && pEscalera==1 && j==3){
 
 				straight=true;
 				pEscalera=0;
@@ -139,7 +143,12 @@ public class ap1 {
 			j++;
 		}
 
+		if((hueco==2)|| pEscalera==1)
+			nose=true;
+
+
 		//best mano miro al final que mano es mejor comprobando por orden de mejor a peor
+
 		if(straight && color)
 			best=Ranking.STRAIGHTFLUSH;
 
@@ -217,16 +226,12 @@ public class ap1 {
 				writer.append("\n");
 			}
 
-			if(pEscalera==1){
-				if(almacenai==0) {
-					writer.write("-Draw: Straight Open");
+			if(nose){
+				if(almacenai==0 || almacenai==3) {
+					writer.write("-Draw: Straight Open-Ended");
 					writer.append("\n");
 				}
 
-				else if(almacenai==3) {
-					writer.write("-Draw: Straight Ended" );
-					writer.append("\n");
-				}
 				else {
 					writer.write("-Draw: Straight Gutshot");
 					writer.append("\n");
