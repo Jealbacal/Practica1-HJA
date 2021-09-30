@@ -59,10 +59,8 @@ public class ap2   {
 				ArrayList<carta> manoAct = new ArrayList<carta>
 						(Arrays.asList(h_cards.get(0), h_cards.get(1), h_cards.get(2), h_cards.get(3), h_cards.get(4)));
 				combinaciones(h_cards, manoAct, 0, h_cards.size() - 1, 0, combs);
-				evaluaCombinaciones(combs,number_of_c_cards);
-				h_cards.clear();
-
-				//Aqui se llama a evalua de ap1 y se pone la mejor de todas
+				mano max = evaluaCombinaciones(combs,number_of_c_cards);
+				//Imprimir max
 			}
 		} catch (Exception ex) {
 			ex.printStackTrace();
@@ -113,15 +111,19 @@ public class ap2   {
 			}
 	}
 
- 	public void evaluaCombinaciones(ArrayList<mano> combs,int number_of_c_cards){
+ 	public mano evaluaCombinaciones(ArrayList<mano> combs,int number_of_c_cards){
 		mano max = null;
+			
 		for (mano x : combs){
 			evalua(x,number_of_c_cards);
-
-
+			if(max == null)
+				max= x;
+			else if (x.getBesthand().biggerThan(max.getBesthand()))
+				max = x;
 		}
-
+		return max;
 	}
+ 	
 
 
 	public void evalua(mano mano,int number_of_c_cards) {
@@ -303,6 +305,99 @@ public class ap2   {
 		}
 
 
+		try (BufferedWriter writer = new BufferedWriter(new FileWriter(this.out,true))){
+			/*
+			writer.write(mano.toString() );
+			writer.append("\n");
+			if(mano.getBesthand()==Ranking.PAIR){
+				writer.write("-Best hand: Pair of "+ serialize(mano.getCartasG()) +"("+mano.getCartasG()+")");
+				writer.append("\n");
+			}
+			else if(mano.getBesthand()==Ranking.TWOPAIR){
+				writer.write("-Best hand: Two-Pair  " + "("+mano.getCartasG()+")"+ writer.append("\n\n"));
+				writer.append("\n");
+			}
+			else if(mano.getBesthand()==Ranking.THREEOFAKIND){
+				writer.write("-Best hand: Three of a kind of "+ serialize(mano.getCartasG()) +"("+mano.getCartasG()+")");
+				writer.append("\n");
+			}
+			else if(mano.getBesthand()==Ranking.STRAIGHT){
+				writer.write("-Best hand: Straight "+ mano.toString());
+				writer.append("\n");
+			}
+			else if(mano.getBesthand()==Ranking.FLUSH){
+				writer.write("-Best hand: Flush "+  mano.toString());
+				writer.append("\n");
+			}
+			else if(mano.getBesthand()==Ranking.FULLHOUSE){
+				writer.write("-Best hand: Full house "+  mano.toString());
+				writer.append("\n");
+			}
+			else if(mano.getBesthand()==Ranking.FOUROFAKIND){
+				writer.write("-Best hand: Four of a kind of "+ serialize(mano.getCartasG()) +"("+mano.getCartasG()+")");
+				writer.append("\n");
+			}
+			else if(mano.getBesthand()==Ranking.STRAIGHTFLUSH){
+				writer.write("-Best hand: Straight Flush "+ mano.toString());
+				writer.append("\n");
+			}
+			else {
+				writer.write("-Best hand: High card " + mano.cartas.get(4).toString());
+				writer.append("\n");
+
+			}
+			//draw miro que posibilidade tengo
+			if(pColor==4){//draw de c
+				writer.write("-Draw: Flush");
+				writer.append("\n");
+			}
+
+			if(nose){
+				if(almacenai==0 || almacenai==3) {
+					writer.write("-Draw: Straight Open-Ended");
+					writer.append("\n");
+				}
+
+				else {
+					writer.write("-Draw: Straight Gutshot");
+					writer.append("\n");
+				}
+
+			}
+
+			writer.append("\n");*/
+
+
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	
+	
+	public String serialize(String ganadora) {
+
+		switch (ganadora.charAt(0)){
+
+			case 'A' :
+				return "Aces";
+
+			case 'K':
+				return  "K's";
+
+			case 'Q':
+				return  "Q's";
+
+			case 'J':
+				return  "J's";
+
+			case 'T':
+				return  "T's";
+
+			default:
+				return  ganadora.charAt(0)+"'s";
+
+		}
 	}
 
 

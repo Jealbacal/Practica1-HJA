@@ -7,23 +7,42 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
-public class ap3 {
+import Ap2.ap2;
+
+public class ap3 extends ap2{
 
 	public String in;
 	public String out;
 
 	public ap3(String in, String out) {
+		super(in, out);
 		this.in = in;
 		this.out = out;
 
 		try {
 			BufferedReader bff = new BufferedReader(new FileReader(new File(this.in)));
 			String act;
-			while ((act = bff.readLine()) != null) { //Bucle principal
-				//
-				//	ToDo  //	leer la mano y evaluar
-				//
+			while ((act = bff.readLine()) != null) { 
+				Partida p = leerMano(act);
+				int number_of_c_cards = 5;
+				ArrayList<mano> maxAbs = new ArrayList<mano>();
+				for(int i = 0; i < p.getnJug(); ++i) {
+					//Ponemos las cartas comunes y las del jugador para hacer las combinaciones
+					ArrayList<carta> resultList = 
+			        		(ArrayList<carta>) Stream.concat(p.getMesa().stream(), p.getJugadores().get(i).getCartas().stream()).collect(Collectors.toList());
+					ArrayList<mano> combs = new ArrayList<mano>();
+					ArrayList<carta> manoAct = new ArrayList<carta> //Inicializo a valores sin importancia
+						(Arrays.asList(p.mesa.get(0), p.mesa.get(0), p.mesa.get(0), p.mesa.get(0), p.mesa.get(0)));
+					combinaciones(resultList, manoAct, 0, resultList.size() - 1, 0, combs);
+					mano max = evaluaCombinaciones(combs,number_of_c_cards);
+					maxAbs.add(max);
+				}
+				ordenaPartida(maxAbs);
+				//imprimir maxAbs
 			}
 		} catch (Exception ex) {
 			ex.printStackTrace();
@@ -51,11 +70,22 @@ public class ap3 {
 			mesa.add(auxC);
 		}
 
-		Partida p = new Partida(mesa, jugadores);
+		Partida p = new Partida(mesa, jugadores, nJg);
 		return p;
 	}
 
-	public void evalua() {
+	//Ordeno con el metodo de burbuja, tendriamos que utilizar otro un poco mas eficiente
+ 	public void ordenaPartida(ArrayList<mano> combs){
+ 		mano aux;
+ 	    for(int i = 0;i < combs.size()-1;i++){
+ 	        for(int j = 0;j < combs.size()-i-1;j++){
+ 	            if(combs.get(j+1).getBesthand().biggerThan(combs.get(j).getBesthand())){    
+ 	                aux = combs.get(j+1);
+ 	               combs.set(j+1,combs.get(j));
+ 	               combs.set(j,aux);
+ 	            }
+ 	        }
+ 	    }
 	}
 
 }

@@ -6,14 +6,16 @@ public class Partida {
 
     public ArrayList<carta> mesa;
     public ArrayList<mano> jugadores;
+    public int nJug;
 
     public Partida () {
         jugadores = new ArrayList<mano>();
     }
 
-    public Partida (ArrayList<carta> mesa, ArrayList<mano> jugadores) {
+    public Partida (ArrayList<carta> mesa, ArrayList<mano> jugadores, int nJug) {
         this.jugadores = jugadores;
         this.mesa = mesa;
+        this.nJug = nJug;
     }
 
     public ArrayList<carta> getMesa() {
@@ -36,6 +38,14 @@ public class Partida {
         jugadores.add(mano);
     }
 
+	public int getnJug() {
+		return nJug;
+	}
 
+	public void setnJug(int nJug) {
+		this.nJug = nJug;
+	}
+
+    
 
 }

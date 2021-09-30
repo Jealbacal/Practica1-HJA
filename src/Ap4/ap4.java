@@ -8,10 +8,11 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import java.util.*;
 import Ap1.ap1;
+import Ap2.ap2;
 import Player.carta;
 import Player.mano;
 
-public class ap4 extends ap1{
+public class ap4 extends ap2{
 	public String in;
 	public String out;
 
@@ -41,7 +42,7 @@ public class ap4 extends ap1{
 				// Por ahora es una varible local, ¿Habria que hacer algo con ella?
 				// Es equivalente a .length() del ArrayList de cartas de
 				// la instancia de c_cards de mano.
-				// ---> ERROR  int number_of_c_cards = Integer.parseInt(act.substring(5, 6));
+				int number_of_c_cards = Integer.parseInt(act.substring(9, 10));
 
 				//Metodos que leen las cartas de sus strings derivados de act.
 				// Va a hacer falta un merge de manos para hacer las combis.
@@ -64,15 +65,21 @@ public class ap4 extends ap1{
 				ArrayList<mano> combsF = new ArrayList<mano>();
 				manoAct = new ArrayList<carta>
 				(Arrays.asList(h_cards.get(0), h_cards.get(1), h_cards.get(2), h_cards.get(3), h_cards.get(4)));
+				
+				//Maximo absoluto, la mano a imprimir
+				mano maxAbs = null;
 				for( mano aux : combs) {
 			        ArrayList<carta> resultList = 
 			        		(ArrayList<carta>) Stream.concat(aux.getCartas().stream(), c_cards.stream()).collect(Collectors.toList());
 					combinaciones(resultList, manoAct, 0, 2+Integer.parseInt(act.substring(9, 10)), 0, combsF);
 					//Aqui se llama a evalua de ap1 y se guarda en un array
-					
+					mano max = evaluaCombinaciones(combs,number_of_c_cards);
+					if(maxAbs == null)
+						maxAbs = max;
+					else if (max.getBesthand().biggerThan(maxAbs.getBesthand()))
+						maxAbs = max;
 				}
-				
-				//Se compara el array y se muestra ordenado
+				//imprimir maxAbs
 				
 			}
 		} catch (Exception ex) {
