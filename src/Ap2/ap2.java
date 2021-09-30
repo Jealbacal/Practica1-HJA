@@ -8,18 +8,20 @@ import Ap1.ap1;
 import Player.*;
 
 
-public class ap2  extends ap1 {
+public class ap2   {
 
 	public String in;
 	public String out;
 
 	public ap2(String in, String out) {
-		super(in, out);
+
+		this.in = in;
+		this.out = out;
 
 		try {
 			// Mantenemos leer la linea entera y procesarla entera.
 			BufferedReader bff = new BufferedReader(new FileReader(new File(this.in)));
-			String act;
+			String act="";
 			while ((act = bff.readLine()) != null) { //Bucle principal
 
 				/*----PARSE--------------------------------------------------------
@@ -39,7 +41,7 @@ public class ap2  extends ap1 {
 				// Por ahora es una varible local, ¿Habria que hacer algo con ella?
 				// Es equivalente a .length() del ArrayList de cartas de
 				// la instancia de c_cards de mano.
-				// ---> ERROR  int number_of_c_cards = Integer.parseInt(act.substring(5, 6));
+				 int number_of_c_cards = Integer.parseInt(act.substring(5, 6));
 
 				//Metodos que leen las cartas de sus strings derivados de act.
 				// Va a hacer falta un merge de manos para hacer las combis.
@@ -57,6 +59,7 @@ public class ap2  extends ap1 {
 				ArrayList<carta> manoAct = new ArrayList<carta>
 						(Arrays.asList(h_cards.get(0), h_cards.get(1), h_cards.get(2), h_cards.get(3), h_cards.get(4)));
 				combinaciones(h_cards, manoAct, 0, h_cards.size() - 1, 0, combs);
+				evaluaCombinaciones(combs,number_of_c_cards);
 				h_cards.clear();
 
 				//Aqui se llama a evalua de ap1 y se pone la mejor de todas
@@ -110,8 +113,18 @@ public class ap2  extends ap1 {
 			}
 	}
 
-	@Override
-	public void evalua(mano mano) {
+ 	public void evaluaCombinaciones(ArrayList<mano> combs,int number_of_c_cards){
+		mano max = null;
+		for (mano x : combs){
+			evalua(x,number_of_c_cards);
+
+
+		}
+
+	}
+
+
+	public void evalua(mano mano,int number_of_c_cards) {
 
 		mano.cartas.sort(carta::compareTo);
 		int i = 0;
@@ -121,8 +134,8 @@ public class ap2  extends ap1 {
 		int pColor = 5;
 		int pEscalera = 0;
 		int almacenai = 0;
-		boolean river;
-		String ganadora = "",ganar;
+		boolean nose=false;
+		String ganadora = "",ganar="";
 		boolean straight = true, color = true;
 		Ranking best;
 		ArrayList<Ranking> comb = new ArrayList<>();
@@ -152,7 +165,7 @@ public class ap2  extends ap1 {
 				} else {
 					par1++;
 					comb.add(Ranking.PAIR);
-					ganadora = mano.cartas.get(i).toString() + mano.cartas.get(i + 1);
+					ganadora = mano.cartas.get(i).toString() + mano.cartas.get(i + 1).toString();
 
 					i++;
 
@@ -160,14 +173,16 @@ public class ap2  extends ap1 {
 
 
 			}
+			else
+				mano.setCartasS(mano.cartas.get(i));
 
 			i++;
 		}
 
 
-		while (j < mano.cartas.size() - 1) {
+		while(j<mano.cartas.size()-1){
 			//miramos si el tienen el mismo color o no
-			if (!mano.cartas.get(j).getPalo().equals(mano.cartas.get(j + 1).getPalo())) {
+			if(!mano.cartas.get(j).getPalo().equals(mano.cartas.get(j + 1).getPalo())) {
 				color = false;
 				pColor--;
 			}
@@ -176,79 +191,119 @@ public class ap2  extends ap1 {
 			//Esta mal
 			//Miramos si los valores solo tienen una diferencia de 1 entre si para comprobar si ahy escalera y guradamos el valor de i para saber por donde seria
 			//el draw y con pEscalera me aseguro que solo falta una carta para hacer la escalera
-			if (mano.cartas.get(j).getValor() != mano.cartas.get(j + 1).getValor() - 1) {
+			if(mano.cartas.get(j).getValor()!=mano.cartas.get(j+1).getValor()-1 ) {
 
 				straight = false;
 
-				if ((mano.cartas.get(j + 1).getValor() - mano.cartas.get(j).getValor()) == 2) {
+				if ((mano.cartas.get(j+1).getValor() - mano.cartas.get(j ).getValor()) == 2) {
 					hueco++;
+					pEscalera++;
+					almacenai=j-1;
 
-				} else if (hueco == 1 && i == 4) {
+				}
+				else if(hueco==1 && j==3  ){
 					hueco++;
-					pEscalera = 1;
+					//pEscalera=1;
+					pEscalera++;
+					almacenai=j-1;
 
-				} else {
+				}
+				else{
 
 					pEscalera++;
-					almacenai = j;
+					almacenai=j;
 				}
 			}
 
 			//caso especial del 'A' con la escalera '2,3,4,5' //
-			if (mano.cartas.get(j).getValor() == 5 && mano.cartas.get(j + 1).getValor() == 14 && straight) {
+			if(mano.cartas.get(j).getValor()==5 && mano.cartas.get(j+1).getValor()==14 && pEscalera==1 && j==3){
 
-				straight = true;
-				pEscalera = 0;
-				almacenai = 0;
+				straight=true;
+				pEscalera=0;
+				almacenai=0;
 			}
 
 			j++;
 		}
 
+
+		if((hueco==2)|| pEscalera==1)
+			nose=true;
+
+
+		//draw miro que posibilidade tengo
+		if(pColor==4 && number_of_c_cards!=5 ){//draw de c
+			mano.setDraws(0);
+
+		}
+
+		if(nose && number_of_c_cards!= 5){
+			if(almacenai==0 || almacenai==3) {
+				mano.setDraws(1);
+
+			}
+
+			else {
+				mano.setDraws(2);
+			}
+
+		}
+
 		//best mano miro al final que mano es mejor comprobando por orden de mejor a peor
 		if (straight && color) {
-			best = Ranking.STRAIGHTFLUSH;
-			ganar = best.toString() + " " + mano.toString();
+			mano.setBesthand(Ranking.STRAIGHTFLUSH);
+
+			mano.setCartasG(mano.toString());
 		}
 
 		else if (comb.contains(Ranking.FOUROFAKIND)){
-			best = Ranking.FOUROFAKIND;
-			ganar = best.toString() + " " + ganadora;
+			mano.setBesthand(Ranking.FOUROFAKIND);
+			mano.setCartasG(ganadora);
+
+
 		}
 
 
 		else if (comb.contains(Ranking.THREEOFAKIND) && comb.contains(Ranking.PAIR)) {
-			best = Ranking.FULLHOUSE;
-			ganar = best.toString() + " " + ganadora;
+			mano.setBesthand(Ranking.FULLHOUSE);
+			mano.setCartasG(ganadora);
+
 		}
 		else if (color) {
-			best = Ranking.FLUSH;
-			ganar = best.toString() + " " + mano.toString();
+			mano.setBesthand(Ranking.FLUSH);
+			mano.setCartasG(mano.toString());
+
 		}
 		else if (straight) {
-			best = Ranking.STRAIGHT;
-			ganar = best.toString() + " " + mano.toString();
+			mano.setBesthand(Ranking.STRAIGHT);
+
+			mano.setCartasG(mano.toString());
 		}
 		else if (comb.contains(Ranking.THREEOFAKIND)) {
-			best = Ranking.THREEOFAKIND;
-			ganar = best.toString() + " " + ganadora;
+			mano.setBesthand(Ranking.THREEOFAKIND);
+
+
+			mano.setCartasG(ganadora);
 		}
 
 
 		else if (par1 == 2) {
-			best = Ranking.TWOPAIR;
-			ganar = best.toString() + " " + ganadora;
+			mano.setBesthand(Ranking.TWOPAIR);
+			mano.setCartasG(ganadora);
 		}
 
 		else if (comb.contains(Ranking.PAIR)) {
-			best = Ranking.PAIR;
-			ganar = best.toString() + " " + ganadora;
+			mano.setBesthand(Ranking.PAIR);
+			mano.setCartasG(ganadora);
 		}
 
 		else {
-			best = Ranking.HIGHCARD;
-			ganar = best.toString() + " " + mano.cartas.get(4).toString();
+			mano.setBesthand(Ranking.HIGHCARD);
+			mano.setCartasG (mano.cartas.get(4).toString());
 		}
+
+
 	}
+
 
 }

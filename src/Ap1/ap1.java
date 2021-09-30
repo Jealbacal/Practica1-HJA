@@ -83,7 +83,7 @@ public class ap1 {
 				else{
 					par1++;
 					comb.add(Ranking.PAIR);
-					ganadora=mano.cartas.get(i).toString()+mano.cartas.get(i+1);
+					ganadora=mano.cartas.get(i).toString()+mano.cartas.get(i+1).toString();
 
 					i++;
 
