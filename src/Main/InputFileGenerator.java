@@ -10,35 +10,76 @@ import java.util.Random;
 import Player.carta;
 import Player.mano;
 
-public class InputFileGenerator_ap1 {
+public class InputFileGenerator {
 	
 	private int n_hands;
-	private final int NLHE_c_h_limit = 5;
+	private final static int NLHE_c_h_limit = 5;
 	private final int deck = 13;
 	private final int suit = 4;
-	private final String file_name = "entrada_ap1.txt";
+	private final String file_name1 = "entrada_ap1.txt";
+	private final String file_name2 = "entrada_ap2.txt";
+	private final String file_name3 = "entrada_ap3.txt";
 	
-	public InputFileGenerator_ap1(int n_hands) {
+	public InputFileGenerator(int n_hands) {
 		this.n_hands = n_hands;
 	}
 	
-	//Genera un archivo
-	public void generatefile() throws IOException {
-			
-			FileWriter fw = new FileWriter(file_name,false);
-			BufferedWriter bw = new BufferedWriter(fw);
-			PrintWriter out = new PrintWriter(bw);
-			
-			for(int i = 0; i < n_hands; i++ ) {
-				out.println(generateHand());
-			}
-			
-			out.close();
+	//Genera un archivo con el formato ap1
+	public void generate_ap1_file() throws IOException {
+		
+		//Prepara el archivo
+		FileWriter fw = new FileWriter(file_name1,false);
+		BufferedWriter bw = new BufferedWriter(fw);
+		PrintWriter out = new PrintWriter(bw);
+		
+		//Genera una mano de 5 cartas
+		for(int i = 0; i < n_hands; i++ ) {
+			out.println(generateHand(NLHE_c_h_limit));
+		}
+		
+		//Cierra el archivo
+		out.close();
 			
 		}
 	
+	//Genera un archivo con el formato ap2
+	public void generate_ap2_file() throws IOException {
+		
+		//Prpara el archivo
+		FileWriter fw = new FileWriter(file_name2,false);
+		BufferedWriter bw = new BufferedWriter(fw);
+		PrintWriter out = new PrintWriter(bw);
+		Random random = new Random();
+		
+		//Genera linea por linea segun el formato especificado
+		for(int i = 0; i < n_hands; i++) {
+			//Genera las hole cards (2 cartas)
+			String line = generateHand(2);
+			
+			//Separador
+			line = line.concat(";");
+			
+			//Randomiza si estamos en flop, turn, o river
+			int n_c_cards = random.ints(3,5+1).findFirst().getAsInt();
+			line = line.concat(Integer.toString(n_c_cards));
+			
+			//Separador
+			line = line.concat(";");
+			
+			//Genera el numero de cartas que indica n_c_cards 
+			String c_cards = generateHand(n_c_cards);
+			line = line.concat(c_cards);
+			
+			//Imprime en el archivo
+			out.println(line);
+		}
+		
+		//Cierra el archivo
+		out.close();
+	}
+		
 	//Genera una mano
-	private String generateHand() {
+	private String generateHand(int n_cards) {
 		
 		String r_hand = "";
 		String r_card = "";
@@ -46,7 +87,7 @@ public class InputFileGenerator_ap1 {
 		ArrayList<String> aux2comp = new ArrayList<String>();
 		
 		// Creamos una mano de 5 cartas
-		for(int i = 0; i < NLHE_c_h_limit; i++) {
+		for(int i = 0; i < n_cards; i++) {
 			do {
 				//Genera la carta
 				r_card = generateCard();
@@ -172,10 +213,12 @@ public class InputFileGenerator_ap1 {
 		
 		int n_cases = 10;
 		
-		InputFileGenerator_ap1 test = new InputFileGenerator_ap1(n_cases);
+		InputFileGenerator test = new InputFileGenerator(n_cases);
 		
 		try {
-			test.generatefile();
+			test.generate_ap1_file();
+			test.generate_ap2_file();
+			
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
