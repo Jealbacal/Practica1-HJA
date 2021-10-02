@@ -118,8 +118,14 @@ public class ap2   {
 			evalua(x,number_of_c_cards);
 			if(max == null)
 				max= x;
+
 			else if (x.getBesthand().biggerThan(max.getBesthand()))
 				max = x;
+			else if(x.getBesthand()==max.getBesthand()){
+
+				max=max.compareMano(x);
+
+			}
 		}
 		return max;
 	}
@@ -141,6 +147,7 @@ public class ap2   {
 		boolean straight = true, color = true;
 		Ranking best;
 		ArrayList<Ranking> comb = new ArrayList<>();
+		ArrayList<carta> combG=new ArrayList<>();
 
 		while (i < mano.cartas.size() - 1) {
 			//miramos segun sea pareja y vamos mirando hacia delante si es trio o poker y lo guardamso en el string para mostrarlo y adelantamos la i
@@ -153,21 +160,33 @@ public class ap2   {
 
 						comb.add(Ranking.FOUROFAKIND);
 
-						ganadora = mano.cartas.get(i).toString() + mano.cartas.get(i + 1).toString() + mano.cartas.get(i + 2).toString() + mano.cartas.get(i + 3).toString();
+						//ganadora = mano.cartas.get(i).toString() + mano.cartas.get(i + 1).toString() + mano.cartas.get(i + 2).toString() + mano.cartas.get(i + 3).toString();
+
+						combG.add(mano.cartas.get(i));
+						combG.add(mano.cartas.get(i+1));
+						combG.add(mano.cartas.get(i+2));
+						combG.add(mano.cartas.get(i+3));
+
 
 						i = i + 3;
 
 					} else {
 						comb.add(Ranking.THREEOFAKIND);
 
-						ganadora = mano.cartas.get(i).toString() + mano.cartas.get(i + 1).toString() + mano.cartas.get(i + 2).toString();
+						//ganadora = mano.cartas.get(i).toString() + mano.cartas.get(i + 1).toString() + mano.cartas.get(i + 2).toString();
+						combG.add(mano.cartas.get(i));
+						combG.add(mano.cartas.get(i+1));
+						combG.add(mano.cartas.get(i+2));
+
 						i = i + 2;
 					}
 
 				} else {
 					par1++;
 					comb.add(Ranking.PAIR);
-					ganadora = mano.cartas.get(i).toString() + mano.cartas.get(i + 1).toString();
+					combG.add(mano.cartas.get(i));
+					combG.add(mano.cartas.get(i+1));
+					//ganadora = mano.cartas.get(i).toString() + mano.cartas.get(i + 1).toString();
 
 					i++;
 
@@ -181,12 +200,14 @@ public class ap2   {
 			i++;
 		}
 
-
 		while(j<mano.cartas.size()-1){
 			//miramos si el tienen el mismo color o no
 			if(!mano.cartas.get(j).getPalo().equals(mano.cartas.get(j + 1).getPalo())) {
 				color = false;
 				pColor--;
+
+				if(j>=1 && j<=3 && mano.cartas.get(j-1).getPalo().equals(mano.cartas.get(j + 1).getPalo()))
+					pColor++;
 			}
 
 
@@ -200,7 +221,7 @@ public class ap2   {
 				if ((mano.cartas.get(j+1).getValor() - mano.cartas.get(j ).getValor()) == 2) {
 					hueco++;
 					pEscalera++;
-					almacenai=j-1;
+					almacenai=j;
 
 				}
 				else if(hueco==1 && j==3  ){
@@ -228,8 +249,10 @@ public class ap2   {
 			j++;
 		}
 
+		if((hueco==2) &&  pEscalera==2)
+			nose=true;
 
-		if((hueco==2)|| pEscalera==1)
+		else if(pEscalera==1)
 			nose=true;
 
 
@@ -255,12 +278,12 @@ public class ap2   {
 		if (straight && color) {
 			mano.setBesthand(Ranking.STRAIGHTFLUSH);
 
-			mano.setCartasG(mano.toString());
+			//mano.setCartasG(mano.cartas);
 		}
 
 		else if (comb.contains(Ranking.FOUROFAKIND)){
 			mano.setBesthand(Ranking.FOUROFAKIND);
-			mano.setCartasG(ganadora);
+			mano.setCartasG(combG);
 
 
 		}
@@ -268,40 +291,40 @@ public class ap2   {
 
 		else if (comb.contains(Ranking.THREEOFAKIND) && comb.contains(Ranking.PAIR)) {
 			mano.setBesthand(Ranking.FULLHOUSE);
-			mano.setCartasG(ganadora);
+			mano.setCartasG(combG);
 
 		}
 		else if (color) {
 			mano.setBesthand(Ranking.FLUSH);
-			mano.setCartasG(mano.toString());
+			//mano.setCartasG(mano.cartas);
 
 		}
 		else if (straight) {
 			mano.setBesthand(Ranking.STRAIGHT);
 
-			mano.setCartasG(mano.toString());
+			//mano.setCartasG(mano.cartas);
 		}
 		else if (comb.contains(Ranking.THREEOFAKIND)) {
 			mano.setBesthand(Ranking.THREEOFAKIND);
 
 
-			mano.setCartasG(ganadora);
+			mano.setCartasG(combG);
 		}
 
 
 		else if (par1 == 2) {
 			mano.setBesthand(Ranking.TWOPAIR);
-			mano.setCartasG(ganadora);
+			mano.setCartasG(combG);
 		}
 
 		else if (comb.contains(Ranking.PAIR)) {
 			mano.setBesthand(Ranking.PAIR);
-			mano.setCartasG(ganadora);
+			mano.setCartasG(combG);
 		}
 
 		else {
 			mano.setBesthand(Ranking.HIGHCARD);
-			mano.setCartasG (mano.cartas.get(4).toString());
+			//mano.setCartasG (mano.cartas.get(4));
 		}
 
 

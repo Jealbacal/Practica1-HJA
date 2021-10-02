@@ -102,6 +102,9 @@ public class ap1 {
 			if(!mano.cartas.get(j).getPalo().equals(mano.cartas.get(j + 1).getPalo())) {
 				color = false;
 				pColor--;
+
+				if(j>=1 && j<=3 && mano.cartas.get(j-1).getPalo().equals(mano.cartas.get(j + 1).getPalo()))
+					pColor++;
 			}
 
 
@@ -115,7 +118,7 @@ public class ap1 {
 				if ((mano.cartas.get(j+1).getValor() - mano.cartas.get(j ).getValor()) == 2) {
 					hueco++;
 					pEscalera++;
-					almacenai=j-1;
+					almacenai=j;
 
 				}
 				else if(hueco==1 && j==3  ){
@@ -143,7 +146,10 @@ public class ap1 {
 			j++;
 		}
 
-		if((hueco==2)|| pEscalera==1)
+		if((hueco==2) &&  pEscalera==2)
+			nose=true;
+
+		else if(pEscalera==1)
 			nose=true;
 
 
