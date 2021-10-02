@@ -19,9 +19,11 @@ public class InputFileGenerator {
 	private final String file_name1 = "entrada_ap1.txt";
 	private final String file_name2 = "entrada_ap2.txt";
 	private final String file_name3 = "entrada_ap3.txt";
+	private ArrayList<String> dealt_cards;
 	
 	public InputFileGenerator(int n_hands) {
 		this.n_hands = n_hands;
+		this.dealt_cards = new ArrayList<String>();
 	}
 	
 	//Genera un archivo con el formato ap1
@@ -53,6 +55,10 @@ public class InputFileGenerator {
 		
 		//Genera linea por linea segun el formato especificado
 		for(int i = 0; i < n_hands; i++) {
+			
+			//Limpiamos las cartas repartidas de lineas anteriores
+			dealt_cards.clear();
+			
 			//Genera las hole cards (2 cartas)
 			String line = generateHand(2);
 			
@@ -77,6 +83,54 @@ public class InputFileGenerator {
 		//Cierra el archivo
 		out.close();
 	}
+	
+	public void generate_ap3_file() throws IOException {
+		
+		//Preparamos el archivo
+		FileWriter fw = new FileWriter(file_name3,false);
+		BufferedWriter bw = new BufferedWriter(fw);
+		PrintWriter out = new PrintWriter(bw);
+		Random random = new Random();
+		
+		//Genera linea a linea en el formato especificado
+		for(int i = 0; i < n_hands; i++) {
+			
+			//Limpiamos las cartas repartidas
+			dealt_cards.clear();
+			
+			//La linea que se va a imprimir
+			String line = "";
+			
+			//Generamos el numero de jugadores -> [2,9]
+			int n_players = random.ints(2,9+1).findFirst().getAsInt();
+			line = line.concat(Integer.toString(n_players));
+			
+			//Separador
+			line = line.concat(";");
+			
+			//Genera las hole cards para cada jugador respetando el formato
+			for(int j = 1; j <= n_players; j++) {
+				//Especificamos a que jugador le estamos dando las cartas
+				line = line.concat("J");
+				line = line.concat(Integer.toString(j));
+				
+				//Le damos las cartas
+				line = line.concat(generateHand(2));
+				
+				//Separador
+				line = line.concat(";");
+			}
+			
+			//Genera 5 cartas comunes en la mesa
+			line = line.concat(generateHand(5));
+			
+			//Imprime en el archivo la linea
+			out.println(line);
+		}
+		
+		//Cerramos el archivo
+		out.close();
+	}
 		
 	//Genera una mano
 	private String generateHand(int n_cards) {
@@ -84,7 +138,6 @@ public class InputFileGenerator {
 		String r_hand = "";
 		String r_card = "";
 		boolean same_card = false;
-		ArrayList<String> aux2comp = new ArrayList<String>();
 		
 		// Creamos una mano de 5 cartas
 		for(int i = 0; i < n_cards; i++) {
@@ -93,9 +146,9 @@ public class InputFileGenerator {
 				r_card = generateCard();
 				
 				//Comprueba que la carta no ha salido ya
-				if(!aux2comp.isEmpty()) {
-					for(int j = 0; j < aux2comp.size(); j++) {
-						if(r_card.equals(aux2comp.get(j))) {
+				if(!dealt_cards.isEmpty()) {
+					for(int j = 0; j < dealt_cards.size(); j++) {
+						if(r_card.equals(dealt_cards.get(j))) {
 							same_card = true;
 						}else {
 							same_card = false;
@@ -108,8 +161,8 @@ public class InputFileGenerator {
 			//Concatena cartas en la mano	
 			r_hand = r_hand.concat(r_card); 
 			
-			//añada al ararylist de la mano para ver si esta repetida
-			aux2comp.add(r_card);
+			//Añade a dealt_cards para ver si esta repetida
+			dealt_cards.add(r_card);
 			
 		}
 		
@@ -218,6 +271,7 @@ public class InputFileGenerator {
 		try {
 			test.generate_ap1_file();
 			test.generate_ap2_file();
+			test.generate_ap3_file();
 			
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
