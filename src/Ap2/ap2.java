@@ -200,12 +200,14 @@ public class ap2   {
 			i++;
 		}
 
-
 		while(j<mano.cartas.size()-1){
 			//miramos si el tienen el mismo color o no
 			if(!mano.cartas.get(j).getPalo().equals(mano.cartas.get(j + 1).getPalo())) {
 				color = false;
 				pColor--;
+
+				if(j>=1 && j<=3 && mano.cartas.get(j-1).getPalo().equals(mano.cartas.get(j + 1).getPalo()))
+					pColor++;
 			}
 
 
@@ -219,7 +221,7 @@ public class ap2   {
 				if ((mano.cartas.get(j+1).getValor() - mano.cartas.get(j ).getValor()) == 2) {
 					hueco++;
 					pEscalera++;
-					almacenai=j-1;
+					almacenai=j;
 
 				}
 				else if(hueco==1 && j==3  ){
@@ -247,8 +249,10 @@ public class ap2   {
 			j++;
 		}
 
+		if((hueco==2) &&  pEscalera==2)
+			nose=true;
 
-		if((hueco==2)|| pEscalera==1)
+		else if(pEscalera==1)
 			nose=true;
 
 
