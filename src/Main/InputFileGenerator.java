@@ -264,7 +264,7 @@ public class InputFileGenerator {
 	//Generador
 	public static void main(String[] args) {
 		
-		int n_cases = 10;
+		int n_cases = 10000;
 		
 		InputFileGenerator test = new InputFileGenerator(n_cases);
 		
