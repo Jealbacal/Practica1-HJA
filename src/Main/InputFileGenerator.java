@@ -19,6 +19,7 @@ public class InputFileGenerator {
 	private final String file_name1 = "entrada_ap1.txt";
 	private final String file_name2 = "entrada_ap2.txt";
 	private final String file_name3 = "entrada_ap3.txt";
+	private final String file_name4 = "entrada_omaha.txt";
 	private ArrayList<String> dealt_cards;
 	
 	public InputFileGenerator(int n_hands) {
@@ -84,6 +85,7 @@ public class InputFileGenerator {
 		out.close();
 	}
 	
+	//Genera un archivo con el formato ap3
 	public void generate_ap3_file() throws IOException {
 		
 		//Preparamos el archivo
@@ -131,7 +133,46 @@ public class InputFileGenerator {
 		//Cerramos el archivo
 		out.close();
 	}
+	
+	//Genera un archivo con el formato omaha
+	public void generate_omaha_file() throws IOException {
 		
+		//Prpara el archivo
+		FileWriter fw = new FileWriter(file_name4,false);
+		BufferedWriter bw = new BufferedWriter(fw);
+		PrintWriter out = new PrintWriter(bw);
+		Random random = new Random();
+		
+		for(int i = 0; i < n_hands; i++) {
+			
+			//Quitamos las cartas que se hayan repartido
+			dealt_cards.clear();
+			
+			//Generamos 4 cartas para el jugador
+			String line = generateHand(4);
+			
+			//Separador
+			line = line.concat(";");
+			
+			//Randomiza si estamos en flop, turn, o river
+			int n_c_cards = random.ints(3,5+1).findFirst().getAsInt();
+			line = line.concat(Integer.toString(n_c_cards));
+			
+			//Separador
+			line = line.concat(";");
+			
+			//Genera el numero de cartas que indica n_c_cards 
+			String c_cards = generateHand(n_c_cards);
+			line = line.concat(c_cards);
+			
+			//Imprime en el archivo
+			out.println(line);
+			
+		}
+		
+		out.close();
+	}
+	
 	//Genera una mano
 	private String generateHand(int n_cards) {
 		
@@ -272,6 +313,7 @@ public class InputFileGenerator {
 			test.generate_ap1_file();
 			test.generate_ap2_file();
 			test.generate_ap3_file();
+			test.generate_omaha_file();
 			
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
