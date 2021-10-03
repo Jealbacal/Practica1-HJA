@@ -60,7 +60,6 @@ public class mano  {
     }
 
 
-
     public ArrayList<carta> getCartas() {
         return cartas;
     }

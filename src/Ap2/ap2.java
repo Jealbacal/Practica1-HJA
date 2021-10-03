@@ -61,6 +61,8 @@ public class ap2   {
 				combinaciones(h_cards, manoAct, 0, h_cards.size() - 1, 0, combs);
 				mano max = evaluaCombinaciones(combs,number_of_c_cards);
 				//Imprimir max
+				System.out.println("pito");
+
 			}
 		} catch (Exception ex) {
 			ex.printStackTrace();
@@ -102,9 +104,15 @@ public class ap2   {
 							  int ini, int fin, int i, ArrayList<mano> combs) {
 
 		if (i == 5) {
-			mano aux = new mano(manoAct);
+			mano aux= new mano();
+
+			for(int k=0;k<manoAct.size();k++){
+				 aux.addCarta(manoAct.get(k));
+			}
+
 			combs.add(aux);
-		} else
+		}
+		else
 			for (int j = ini; j <= fin && fin - j + 1 >= 5 - i; j++) {
 				manoAct.set(i, cartas.get(j));
 				combinaciones(cartas, manoAct, j + 1, fin, i + 1, combs);
