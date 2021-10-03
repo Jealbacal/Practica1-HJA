@@ -60,8 +60,10 @@ public class ap2   {
 						(Arrays.asList(h_cards.get(0), h_cards.get(1), h_cards.get(2), h_cards.get(3), h_cards.get(4)));
 				combinaciones(h_cards, manoAct, 0, h_cards.size() - 1, 0, combs);
 				mano max = evaluaCombinaciones(combs,number_of_c_cards);
+
 				//Imprimir max
-				System.out.println("pito");
+				imprimir(max,act);
+
 
 			}
 		} catch (Exception ex) {
@@ -273,7 +275,6 @@ public class ap2   {
 		if(nose && number_of_c_cards!= 5){
 			if(almacenai==0 || almacenai==3) {
 				mano.setDrawS(0);
-
 			}
 
 			else {
@@ -335,76 +336,67 @@ public class ap2   {
 			//mano.setCartasG (mano.cartas.get(4));
 		}
 
+	}
 
-		try (BufferedWriter writer = new BufferedWriter(new FileWriter(this.out,true))){
-			/*
-			writer.write(mano.toString() );
+	public void  imprimir(mano max,String act){
+
+
+		try(BufferedWriter writer = new BufferedWriter(new FileWriter(this.out,true))) {
+
+			writer.write(act);
 			writer.append("\n");
-			if(mano.getBesthand()==Ranking.PAIR){
-				writer.write("-Best hand: Pair of "+ serialize(mano.getCartasG()) +"("+mano.getCartasG()+")");
+			if (max.getBesthand() == Ranking.PAIR) {
+				writer.write("-Best hand: Pair of " + serialize(max.getCartasG().get(0).toString()) + " with " + max.toString());
 				writer.append("\n");
-			}
-			else if(mano.getBesthand()==Ranking.TWOPAIR){
-				writer.write("-Best hand: Two-Pair  " + "("+mano.getCartasG()+")"+ writer.append("\n\n"));
+			} else if (max.getBesthand() == Ranking.TWOPAIR) {
+				writer.write("-Best hand: Two-Pair  " + " with " + max.toString());
 				writer.append("\n");
-			}
-			else if(mano.getBesthand()==Ranking.THREEOFAKIND){
-				writer.write("-Best hand: Three of a kind of "+ serialize(mano.getCartasG()) +"("+mano.getCartasG()+")");
+			} else if (max.getBesthand() == Ranking.THREEOFAKIND) {
+				writer.write("-Best hand: Three of a kind of " + serialize(max.getCartasG().get(0).toString()) +  " with " + max.toString());
 				writer.append("\n");
-			}
-			else if(mano.getBesthand()==Ranking.STRAIGHT){
-				writer.write("-Best hand: Straight "+ mano.toString());
+			} else if (max.getBesthand() == Ranking.STRAIGHT) {
+				writer.write("-Best hand: Straight " + " with " + max.toString());
 				writer.append("\n");
-			}
-			else if(mano.getBesthand()==Ranking.FLUSH){
-				writer.write("-Best hand: Flush "+  mano.toString());
+			} else if (max.getBesthand() == Ranking.FLUSH) {
+				writer.write("-Best hand: Flush " + " with " + max.toString());
 				writer.append("\n");
-			}
-			else if(mano.getBesthand()==Ranking.FULLHOUSE){
-				writer.write("-Best hand: Full house "+  mano.toString());
+			} else if (max.getBesthand() == Ranking.FULLHOUSE) {
+				writer.write("-Best hand: Full house " + " with " + max.toString());
 				writer.append("\n");
-			}
-			else if(mano.getBesthand()==Ranking.FOUROFAKIND){
-				writer.write("-Best hand: Four of a kind of "+ serialize(mano.getCartasG()) +"("+mano.getCartasG()+")");
+			} else if (max.getBesthand() == Ranking.FOUROFAKIND) {
+				writer.write("-Best hand: Four of a kind of " + serialize(max.getCartasG().get(0).toString()) + " with " + max.toString());
 				writer.append("\n");
-			}
-			else if(mano.getBesthand()==Ranking.STRAIGHTFLUSH){
-				writer.write("-Best hand: Straight Flush "+ mano.toString());
+			} else if (max.getBesthand() == Ranking.STRAIGHTFLUSH) {
+				writer.write("-Best hand: Straight Flush " + " with " + max.toString());
 				writer.append("\n");
-			}
-			else {
-				writer.write("-Best hand: High card " + mano.cartas.get(4).toString());
+			} else {
+				writer.write("-Best hand: High card " + max.cartas.get(4).toString() + " with " + max.toString());
 				writer.append("\n");
 
 			}
-			//draw miro que posibilidade tengo
-			if(pColor==4){//draw de c
+
+			if(max.getDrawF()==0) {
 				writer.write("-Draw: Flush");
 				writer.append("\n");
 			}
 
-			if(nose){
-				if(almacenai==0 || almacenai==3) {
-					writer.write("-Draw: Straight Open-Ended");
-					writer.append("\n");
-				}
-
-				else {
-					writer.write("-Draw: Straight Gutshot");
-					writer.append("\n");
-				}
-
+			if(max.getDrawS()==0){
+				writer.write("-Draw: Straight Open-Ended");
+				writer.append("\n");
 			}
 
-			writer.append("\n");*/
-
-
-		} catch (IOException e) {
-			e.printStackTrace();
+			else if (max.getDrawS()==1) {
+				writer.write("-Draw: Straight Gutshot");
+				writer.append("\n");
+			}
+			writer.append("\n");
+		}
+		catch (IOException ioException) {
+			ioException.printStackTrace();
 		}
 	}
-	
-	
+
+
 	
 	public String serialize(String ganadora) {
 

@@ -70,6 +70,11 @@ public class mano  {
 
     public mano () {
         this.cartas = new ArrayList<>();
+        this.besthand=Ranking.HIGHCARD;
+        this.cartasG=null;
+        this.cartasS=null;
+        this.drawS=-1;
+        this.drawF=-1;
     }
 
 
