@@ -4,15 +4,15 @@ import Player.Partida;
 import Player.Ranking;
 import Player.carta;
 import Player.mano;
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
+
+import java.io.*;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import Ap2.ap2;
+
 
 public class ap3 {
 
@@ -31,6 +31,7 @@ public class ap3 {
 				Partida p = leerMano(act);
 				int number_of_c_cards = 5;
 				ArrayList<mano> maxAbs = new ArrayList<mano>();
+				HashMap<mano,Integer> asignacion= new HashMap<mano,Integer>();
 				for(int i = 0; i < p.getnJug(); ++i) {
 					//Ponemos las cartas comunes y las del jugador para hacer las combinaciones
 					ArrayList<carta> resultList = 
@@ -40,11 +41,13 @@ public class ap3 {
 						(Arrays.asList(p.mesa.get(0), p.mesa.get(0), p.mesa.get(0), p.mesa.get(0), p.mesa.get(0)));
 					combinaciones(resultList, manoAct, 0, resultList.size() - 1, 0, combs);
 					mano max = evaluaCombinaciones(combs,number_of_c_cards);
+					asignacion.put(max,i+1);
 					maxAbs.add(max);
 				}
 				ordenaPartida(maxAbs);
 				//imprimir maxAbs
-				System.out.println("nose");
+				imprimir(asignacion,maxAbs,act);
+
 			}
 		} catch (Exception ex) {
 			ex.printStackTrace();
@@ -189,7 +192,7 @@ public class ap3 {
 						combG.add(mano.cartas.get(i));
 						combG.add(mano.cartas.get(i+1));
 						combG.add(mano.cartas.get(i+2));
-
+						mano.setTrio(mano.getCartas().get(i).getValor());
 						i = i + 2;
 					}
 
@@ -199,7 +202,7 @@ public class ap3 {
 					combG.add(mano.cartas.get(i));
 					combG.add(mano.cartas.get(i+1));
 					//ganadora = mano.cartas.get(i).toString() + mano.cartas.get(i + 1).toString();
-
+					mano.setPareja(mano.getCartas().get(i).getValor());
 					i++;
 
 
@@ -346,5 +349,95 @@ public class ap3 {
 		}
 
 	}
+
+	public void  imprimir(HashMap<mano,Integer> asignacion,ArrayList<mano> maxAbs,String act){
+
+
+		try(BufferedWriter writer = new BufferedWriter(new FileWriter(this.out,true))) {
+
+			writer.write(act);
+			writer.append("\n");
+			for(int i=0; i < maxAbs.size();i++){
+
+				if (maxAbs.get(i).getBesthand() == Ranking.PAIR) {
+					writer.write("J"+asignacion.get(maxAbs.get(i))+": "+maxAbs.get(i).toString() + " (Pair of "+serialize(maxAbs.get(i).getCartasG().get(0).toString())+")");
+					writer.append("\n");
+				}
+
+				else if (maxAbs.get(i).getBesthand() == Ranking.TWOPAIR) {
+					writer.write("J"+asignacion.get(maxAbs.get(i))+": "+maxAbs.get(i).toString() + " (Two Pair)");
+					writer.append("\n");
+				}
+
+				else if (maxAbs.get(i).getBesthand() == Ranking.THREEOFAKIND) {
+					writer.write("J"+asignacion.get(maxAbs.get(i))+": "+maxAbs.get(i).toString() + " (Three of a kind of "+serialize(maxAbs.get(i).getCartasG().get(0).toString())+")");
+					writer.append("\n");
+				}
+
+				else if (maxAbs.get(i).getBesthand() == Ranking.STRAIGHT) {
+					writer.write("J"+asignacion.get(maxAbs.get(i))+": "+maxAbs.get(i).toString() + " (Straight)");
+					writer.append("\n");
+				}
+
+				else if (maxAbs.get(i).getBesthand() == Ranking.FLUSH) {
+					writer.write("J"+asignacion.get(maxAbs.get(i))+": "+maxAbs.get(i).toString() + " (Flush)");
+					writer.append("\n");
+				}
+
+				else if (maxAbs.get(i).getBesthand() == Ranking.FULLHOUSE) {
+					writer.write("J"+asignacion.get(maxAbs.get(i))+": "+maxAbs.get(i).toString() + " (Full House)");
+					writer.append("\n");
+				}
+
+				else if (maxAbs.get(i).getBesthand() == Ranking.FOUROFAKIND) {
+					writer.write("J"+asignacion.get(maxAbs.get(i))+": "+maxAbs.get(i).toString() + "(Four of a kind of "+serialize(maxAbs.get(i).getCartasG().get(0).toString())+")");
+					writer.append("\n");
+				}
+
+				else if (maxAbs.get(i).getBesthand() == Ranking.STRAIGHTFLUSH) {
+					writer.write("J"+asignacion.get(maxAbs.get(i))+": "+maxAbs.get(i).toString() + " (Straight Flush)");
+					writer.append("\n");
+				}
+
+				else {
+					writer.write("J"+asignacion.get(maxAbs.get(i))+": "+maxAbs.get(i).toString() + " (High Card "+ maxAbs.get(i).getCartas().get(4)+ ")");
+					writer.append("\n");
+
+				}
+
+
+			}
+			writer.append("\n");
+		}
+		catch (IOException ioException) {
+			ioException.printStackTrace();
+		}
+	}
+
+	public String serialize(String ganadora) {
+
+		switch (ganadora.charAt(0)){
+
+			case 'A' :
+				return "Aces";
+
+			case 'K':
+				return  "K's";
+
+			case 'Q':
+				return  "Q's";
+
+			case 'J':
+				return  "J's";
+
+			case 'T':
+				return  "T's";
+
+			default:
+				return  ganadora.charAt(0)+"'s";
+
+		}
+	}
+
 
 }

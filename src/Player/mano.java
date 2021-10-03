@@ -11,6 +11,8 @@ public class mano  {
     public carta cartasS;
     public int drawF;
     public int drawS;
+    public int pareja;
+    public int trio;
 
 
     public Ranking getBesthand() {
@@ -55,6 +57,15 @@ public class mano  {
     public int getDrawS() {
         return drawS;
     }
+
+    public int getPareja(){return pareja;}
+
+    public void setPareja(int par){this.pareja=par;}
+
+    public int getTrio(){return trio;}
+
+    public void setTrio(int trio){this.trio=trio;}
+
 
     public mano (ArrayList<carta> cartas) {
         this.cartas = cartas;
@@ -108,10 +119,10 @@ public class mano  {
         }
 
         else if(x.getBesthand()==Ranking.PAIR){
-            if(this.cartasG.get(1).getValor()>x.getCartasG().get(1).getValor()){
+            if(this.getPareja()>x.getPareja()){
                 return this;
             }
-            else if (this.cartasG.get(1).getValor()==x.getCartasG().get(1).getValor()){
+            else if (this.getPareja()==x.getPareja()){
                 if(this.cartasS.getValor()>x.getCartasS().getValor())
                     return this;
 
@@ -151,10 +162,10 @@ public class mano  {
         }
 
         else if(x.getBesthand()==Ranking.THREEOFAKIND) {
-            if(this.cartasG.get(2).getValor()>x.getCartasG().get(2).getValor()){
+            if(this.getTrio()>x.getTrio()){
                 return this;
             }
-            else if (this.cartasG.get(2).getValor()==x.getCartasG().get(2).getValor()){
+            else if (this.getTrio()==x.getTrio()){
 
                 if(this.cartasS.getValor()>x.getCartasS().getValor())
                     return this;
@@ -179,51 +190,28 @@ public class mano  {
             return  this.compareOnebyOne(x);
         }
 
-        //asquerosidad si se consigue una mejor manera pls
-        else if(x.getBesthand()==Ranking.FULLHOUSE){
 
-            //trio primero
-            if(this.cartasG.get(0).getValor()==this.cartasG.get(2).getValor()){
-                //trio 2 primero
-                if(x.cartasG.get(0).getValor() == x.cartasG.get(2).getValor()){
-                    //comparo ambos trios
-                    if(this.cartasG.get(0).getValor()>x.cartasG.get(0).getValor()){
+        else if(x.getBesthand()==Ranking.FULLHOUSE){
+            //miro trio
+            if(this.getTrio()>x.getTrio()){
+                return this;
+            }
+            else{
+                // si trios iguales miro parejas
+                if(this.getTrio()==x.getTrio()){
+                    if(this.getPareja()>x.getPareja()){
                         return this;
                     }
                     else{
-                        //si trios iguales
-                        if(this.cartasG.get(0).getValor()==x.cartasG.get(0).getValor()){
-                            //pareja mayor nuestra
-                            if(this.cartasG.get(3).getValor()>x.cartasG.get(3).getValor()){
-                                return this;
-                            }
-                            else{
-                                //parejas iguales
-                                if(this.cartasG.get(3).getValor()==x.cartasG.get(3).getValor()){
-                                    return this;
-                                }
-                                else{
-                                    return x;
-                                }
-
-                            }
-                        }
-                        else{
-                            return x;
-                        }
-
-
+                        return x;
                     }
                 }
-
-            }//pareja primero
-            else{
-                //pareja 2 primero
-                //if(x.cartasG.get(0).getValor() != x.cartasG.get(2).getValor()){
-
-                //}
-
+                else{
+                    return x;
+                }
             }
+
+
         }
 
         else if(x.getBesthand()==Ranking.FOUROFAKIND){

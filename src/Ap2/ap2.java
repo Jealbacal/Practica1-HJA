@@ -144,7 +144,7 @@ public class ap2   {
 
 	public void evalua(mano mano,int number_of_c_cards) {
 
-		mano.cartas.sort(carta::compareTo);
+		mano.getCartas().sort(carta::compareTo);
 		int i = 0;
 		int j = 0;
 		int hueco = 0;
@@ -152,30 +152,30 @@ public class ap2   {
 		int pColor = 5;
 		int pEscalera = 0;
 		int almacenai = 0;
-		boolean nose=false;
+		boolean proyectoE=false;
 		String ganadora = "",ganar="";
 		boolean straight = true, color = true;
 		Ranking best;
 		ArrayList<Ranking> comb = new ArrayList<>();
 		ArrayList<carta> combG=new ArrayList<>();
 
-		while (i < mano.cartas.size() - 1) {
+		while (i < mano.getCartas().size() - 1) {
 			//miramos segun sea pareja y vamos mirando hacia delante si es trio o poker y lo guardamso en el string para mostrarlo y adelantamos la i
-			if (i + 1 < mano.cartas.size() && mano.cartas.get(i).getValor() == mano.cartas.get(i + 1).getValor()) {
+			if (i + 1 < mano.getCartas().size() && mano.getCartas().get(i).getValor() == mano.getCartas().get(i + 1).getValor()) {
 				//me guardo si hay pareja y con par1 veo si hay mas de 1 para poner doble pareja
 
-				if (i + 2 < mano.cartas.size() && mano.cartas.get(i).getValor() == mano.cartas.get(i + 2).getValor()) {
+				if (i + 2 < mano.getCartas().size() && mano.getCartas().get(i).getValor() == mano.getCartas().get(i + 2).getValor()) {
 
-					if (i + 3 < mano.cartas.size() && mano.cartas.get(i).getValor() == mano.cartas.get(i + 3).getValor()) {
+					if (i + 3 < mano.getCartas().size() && mano.getCartas().get(i).getValor() == mano.getCartas().get(i + 3).getValor()) {
 
 						comb.add(Ranking.FOUROFAKIND);
 
 						//ganadora = mano.cartas.get(i).toString() + mano.cartas.get(i + 1).toString() + mano.cartas.get(i + 2).toString() + mano.cartas.get(i + 3).toString();
 
-						combG.add(mano.cartas.get(i));
-						combG.add(mano.cartas.get(i+1));
-						combG.add(mano.cartas.get(i+2));
-						combG.add(mano.cartas.get(i+3));
+						combG.add(mano.getCartas().get(i));
+						combG.add(mano.getCartas().get(i+1));
+						combG.add(mano.getCartas().get(i+2));
+						combG.add(mano.getCartas().get(i+3));
 
 
 						i = i + 3;
@@ -184,9 +184,10 @@ public class ap2   {
 						comb.add(Ranking.THREEOFAKIND);
 
 						//ganadora = mano.cartas.get(i).toString() + mano.cartas.get(i + 1).toString() + mano.cartas.get(i + 2).toString();
-						combG.add(mano.cartas.get(i));
-						combG.add(mano.cartas.get(i+1));
-						combG.add(mano.cartas.get(i+2));
+						combG.add(mano.getCartas().get(i));
+						combG.add(mano.getCartas().get(i+1));
+						combG.add(mano.getCartas().get(i+2));
+						mano.setTrio(mano.getCartas().get(i).getValor());
 
 						i = i + 2;
 
@@ -196,59 +197,60 @@ public class ap2   {
 				else {
 					par1++;
 					comb.add(Ranking.PAIR);
-					combG.add(mano.cartas.get(i));
-					combG.add(mano.cartas.get(i+1));
-					//ganadora = mano.cartas.get(i).toString() + mano.cartas.get(i + 1).toString();
-
+					combG.add(mano.getCartas().get(i));
+					combG.add(mano.getCartas().get(i+1));
+					//ganadora = mano.cartas.get(i).toString() + mano.cartas.get(i + 1).toString()
+					mano.setPareja(mano.getCartas().get(i).getValor());
 					i++;
 
 				}
 
 				if(i==3){
-					mano.setCartasS(mano.cartas.get(i+1));
+					mano.setCartasS(mano.getCartas().get(i+1));
 				}
 
 
 			}
 			else
-				mano.setCartasS(mano.cartas.get(i));
+				mano.setCartasS(mano.getCartas().get(i));
 
 			i++;
 
 
 		}
 
-		while(j<mano.cartas.size()-1){
+		while(j<mano.getCartas().size()-1){
 			//miramos si el tienen el mismo color o no
-			if(!mano.cartas.get(j).getPalo().equals(mano.cartas.get(j + 1).getPalo())) {
+			if(!mano.getCartas().get(j).getPalo().equals(mano.getCartas().get(j + 1).getPalo())) {
 				color = false;
 				pColor--;
 
-				if(j>=1 && j<=3 && mano.cartas.get(j-1).getPalo().equals(mano.cartas.get(j + 1).getPalo()))
+				if(j>=1 && j<=3 && mano.getCartas().get(j-1).getPalo().equals(mano.getCartas().get(j + 1).getPalo()))
 					pColor++;
 			}
 
 
-			//Esta mal
+
 			//Miramos si los valores solo tienen una diferencia de 1 entre si para comprobar si ahy escalera y guradamos el valor de i para saber por donde seria
 			//el draw y con pEscalera me aseguro que solo falta una carta para hacer la escalera
-			if(mano.cartas.get(j).getValor()!=mano.cartas.get(j+1).getValor()-1 ) {
+			if(mano.getCartas().get(j).getValor()!=mano.getCartas().get(j+1).getValor()-1 ) {
 
 				straight = false;
-
-				if ((mano.cartas.get(j+1).getValor() - mano.cartas.get(j ).getValor()) == 2) {
+				//miramos si hay un hueco tipo 4h6c donde podria ir una entre medias
+				if ((mano.getCartas().get(j+1).getValor() - mano.getCartas().get(j ).getValor()) == 2) {
 					hueco++;
 					pEscalera++;
 					almacenai=j;
 
 				}
+				//si hay un hueco y estamos en el final esa carta podria susutituirse por una que entrara en el hueco
 				else if(hueco==1 && j==3  ){
 					hueco++;
 					//pEscalera=1;
 					pEscalera++;
 					almacenai=j-1;
 
-				}
+				}//caso de que solo haya uno diferente por ejemplo
 				else{
 
 					pEscalera++;
@@ -257,7 +259,7 @@ public class ap2   {
 			}
 
 			//caso especial del 'A' con la escalera '2,3,4,5' //
-			if(mano.cartas.get(j).getValor()==5 && mano.cartas.get(j+1).getValor()==14 && pEscalera==1 && j==3){
+			if(mano.getCartas().get(j).getValor()==5 && mano.getCartas().get(j+1).getValor()==14 && pEscalera==1 && j==3){
 
 				straight=true;
 				pEscalera=0;
@@ -268,10 +270,10 @@ public class ap2   {
 		}
 
 		if((hueco==2) &&  pEscalera==2)
-			nose=true;
+			proyectoE=true;
 
 		else if(pEscalera==1)
-			nose=true;
+			proyectoE=true;
 
 
 		//draw miro que posibilidade tengo
@@ -280,7 +282,7 @@ public class ap2   {
 
 		}
 
-		if(nose && number_of_c_cards!= 5){
+		if(proyectoE && number_of_c_cards!= 5){
 			if(almacenai==0 || almacenai==3) {
 				mano.setDrawS(0);
 			}
@@ -378,7 +380,7 @@ public class ap2   {
 				writer.write("-Best hand: Straight Flush " + " with " + max.toString());
 				writer.append("\n");
 			} else {
-				writer.write("-Best hand: High card " + max.cartas.get(4).toString() + " with " + max.toString());
+				writer.write("-Best hand: High card " + max.getCartas().get(4).toString() + " with " + max.toString());
 				writer.append("\n");
 
 			}

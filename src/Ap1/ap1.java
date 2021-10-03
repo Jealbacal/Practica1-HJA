@@ -43,7 +43,7 @@ public class ap1 {
 	
 	public void evalua(mano mano) {
 
-		mano.cartas.sort(carta::compareTo);
+		mano.getCartas().sort(carta::compareTo);
 		int i=0;
 		int j=0;
 		int hueco=0;
@@ -56,18 +56,18 @@ public class ap1 {
 		Ranking best;
 		ArrayList<Ranking> comb = new ArrayList<>();
 
-		while(i<mano.cartas.size()-1){
+		while(i<mano.getCartas().size()-1){
         //miramos segun sea pareja y vamos mirando hacia delante si es trio o poker y lo guardamso en el string para mostrarlo y adelantamos la i
-			if(i+1<mano.cartas.size() &&mano.cartas.get(i).getValor()==mano.cartas.get(i+1).getValor()  ) {
+			if(i+1<mano.getCartas().size() &&mano.getCartas().get(i).getValor()==mano.getCartas().get(i+1).getValor()  ) {
 				//me guardo si hay pareja y con par1 veo si hay mas de 1 para poner doble pareja
 
-				if(i+2<mano.cartas.size() && mano.cartas.get(i).getValor()==mano.cartas.get(i+2).getValor()  ){
+				if(i+2<mano.getCartas().size() && mano.getCartas().get(i).getValor()==mano.getCartas().get(i+2).getValor()  ){
 
-					if(i+3<mano.cartas.size() && mano.cartas.get(i).getValor()==mano.cartas.get(i+3).getValor()  ){
+					if(i+3<mano.getCartas().size() && mano.getCartas().get(i).getValor()==mano.getCartas().get(i+3).getValor()  ){
 
 						comb.add(Ranking.FOUROFAKIND);
 
-						ganadora=mano.cartas.get(i).toString()+mano.cartas.get(i+1).toString()+mano.cartas.get(i+2).toString()+mano.cartas.get(i+3).toString();
+						ganadora=mano.getCartas().get(i).toString()+mano.getCartas().get(i+1).toString()+mano.getCartas().get(i+2).toString()+mano.getCartas().get(i+3).toString();
 
 						i=i+3;
 
@@ -75,7 +75,7 @@ public class ap1 {
 					else {
 						comb.add(Ranking.THREEOFAKIND);
 
-						ganadora=mano.cartas.get(i).toString()+mano.cartas.get(i+1).toString()+mano.cartas.get(i+2).toString();
+						ganadora=mano.getCartas().get(i).toString()+mano.getCartas().get(i+1).toString()+mano.getCartas().get(i+2).toString();
 						i=i+2;
 					}
 
@@ -83,7 +83,7 @@ public class ap1 {
 				else{
 					par1++;
 					comb.add(Ranking.PAIR);
-					ganadora=mano.cartas.get(i).toString()+mano.cartas.get(i+1).toString();
+					ganadora=mano.getCartas().get(i).toString()+mano.getCartas().get(i+1).toString();
 
 					i++;
 
@@ -97,13 +97,13 @@ public class ap1 {
 
 
 
-		while(j<mano.cartas.size()-1){
+		while(j<mano.getCartas().size()-1){
 			//miramos si el tienen el mismo color o no
-			if(!mano.cartas.get(j).getPalo().equals(mano.cartas.get(j + 1).getPalo())) {
+			if(!mano.getCartas().get(j).getPalo().equals(mano.getCartas().get(j + 1).getPalo())) {
 				color = false;
 				pColor--;
 
-				if(j>=1 && j<=3 && mano.cartas.get(j-1).getPalo().equals(mano.cartas.get(j + 1).getPalo()))
+				if(j>=1 && j<=3 && mano.getCartas().get(j-1).getPalo().equals(mano.getCartas().get(j + 1).getPalo()))
 					pColor++;
 			}
 
@@ -111,11 +111,11 @@ public class ap1 {
 			//Esta mal
 			//Miramos si los valores solo tienen una diferencia de 1 entre si para comprobar si ahy escalera y guradamos el valor de i para saber por donde seria
 			//el draw y con pEscalera me aseguro que solo falta una carta para hacer la escalera
-			if(mano.cartas.get(j).getValor()!=mano.cartas.get(j+1).getValor()-1 ) {
+			if(mano.getCartas().get(j).getValor()!=mano.getCartas().get(j+1).getValor()-1 ) {
 
 				straight = false;
 
-				if ((mano.cartas.get(j+1).getValor() - mano.cartas.get(j ).getValor()) == 2) {
+				if ((mano.getCartas().get(j+1).getValor() - mano.getCartas().get(j ).getValor()) == 2) {
 					hueco++;
 					pEscalera++;
 					almacenai=j;
@@ -136,7 +136,7 @@ public class ap1 {
 			}
 
 			//caso especial del 'A' con la escalera '2,3,4,5' //
-			if(mano.cartas.get(j).getValor()==5 && mano.cartas.get(j+1).getValor()==14 && pEscalera==1 && j==3){
+			if(mano.getCartas().get(j).getValor()==5 && mano.getCartas().get(j+1).getValor()==14 && pEscalera==1 && j==3){
 
 				straight=true;
 				pEscalera=0;
@@ -222,7 +222,7 @@ public class ap1 {
 				writer.append("\n");
 			}
 			else {
-				writer.write("-Best hand: High card " + mano.cartas.get(4).toString());
+				writer.write("-Best hand: High card " + mano.getCartas().get(4).toString());
 				writer.append("\n");
 
 			}
@@ -254,7 +254,7 @@ public class ap1 {
 
 	}
 
-
+//para escribir bien al sacar la mejor mano
 	public String serialize(String ganadora) {
 
 		switch (ganadora.charAt(0)){
