@@ -167,7 +167,7 @@ public class mano  {
 
         else if(x.getBesthand()==Ranking.STRAIGHT){
 
-            if(this.cartasG.get(4).getValor()>x.getCartasG().get(4).getValor())
+            if(this.cartas.get(4).getValor()>x.getCartas().get(4).getValor())
                 return this;
 
             else
@@ -243,7 +243,7 @@ public class mano  {
 
         else if(x.getBesthand()==Ranking.STRAIGHTFLUSH){
 
-            if(this.cartasG.get(4).getValor()>x.getCartasG().get(4).getValor()){
+            if(this.cartas.get(4).getValor()>x.getCartas().get(4).getValor()){
                 return this;
             }
             else{

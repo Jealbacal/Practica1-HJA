@@ -189,9 +189,11 @@ public class ap2   {
 						combG.add(mano.cartas.get(i+2));
 
 						i = i + 2;
+
 					}
 
-				} else {
+				}
+				else {
 					par1++;
 					comb.add(Ranking.PAIR);
 					combG.add(mano.cartas.get(i));
@@ -202,12 +204,18 @@ public class ap2   {
 
 				}
 
+				if(i==3){
+					mano.setCartasS(mano.cartas.get(i+1));
+				}
+
 
 			}
 			else
 				mano.setCartasS(mano.cartas.get(i));
 
 			i++;
+
+
 		}
 
 		while(j<mano.cartas.size()-1){
