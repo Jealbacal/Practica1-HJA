@@ -106,7 +106,12 @@ public class ap4 extends ap2{
 			int ini, int fin, int i, ArrayList<mano> combs) {
 
 		if (i == 5) {
-			mano aux = new mano(manoAct);
+			mano aux= new mano();
+
+			for(int k=0;k<manoAct.size();k++){
+				aux.addCarta(manoAct.get(k));
+			}
+
 			combs.add(aux);
 		} else
 			for (int j = ini; j <= fin && fin - j + 1 >= 5 - i; j++) {

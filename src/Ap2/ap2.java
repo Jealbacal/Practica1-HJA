@@ -266,18 +266,18 @@ public class ap2   {
 
 		//draw miro que posibilidade tengo
 		if(pColor==4 && number_of_c_cards!=5 ){//draw de c
-			mano.setDraws(0);
+			mano.setDrawF(0);
 
 		}
 
 		if(nose && number_of_c_cards!= 5){
 			if(almacenai==0 || almacenai==3) {
-				mano.setDraws(1);
+				mano.setDrawS(0);
 
 			}
 
 			else {
-				mano.setDraws(2);
+				mano.setDrawS(1);
 			}
 
 		}

@@ -9,7 +9,8 @@ public class mano  {
     public Ranking besthand;
     public ArrayList<carta>cartasG;
     public carta cartasS;
-    public int draws;
+    public int drawF;
+    public int drawS;
 
 
     public Ranking getBesthand() {
@@ -20,6 +21,8 @@ public class mano  {
         return cartasG;
     }
 
+
+
     public void setBesthand(Ranking besthand) {
         this.besthand = besthand;
     }
@@ -27,6 +30,7 @@ public class mano  {
     public void setCartasG(ArrayList<carta>cartasG) {
         this.cartasG = cartasG;
     }
+
 
     public void setCartasS(carta cartasS) {
         this.cartasS = cartasS;
@@ -36,13 +40,20 @@ public class mano  {
         return cartasS;
     }
 
-    public void setDraws(int draws) {
-        this.draws = draws;
+    public void setDrawF(int drawF) {
+        this.drawF = drawF;
     }
 
+    public int getDrawF() {
+        return drawF;
+    }
 
-    public int getDraws() {
-        return draws;
+    public void setDrawS(int draws) {
+        this.drawS = draws;
+    }
+
+    public int getDrawS() {
+        return drawS;
     }
 
     public mano (ArrayList<carta> cartas) {
@@ -50,7 +61,9 @@ public class mano  {
         this.besthand=Ranking.HIGHCARD;
         this.cartasG=null;
         this.cartasS=null;
-        this.draws=-1;
+        this.drawS=-1;
+        this.drawF=-1;
+
 
 
     }
