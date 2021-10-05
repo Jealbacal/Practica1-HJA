@@ -1,11 +1,9 @@
 package Main;
 
-import java.util.*;
-
-import Ap1.ap1;
-import Ap2.ap2;
-import Ap3.ap3;
-import Ap4.ap4;
+import Ap1.Ap1;
+import Ap2.Ap2;
+import Ap3.Ap3;
+import Ap4.Ap4;
 
 public class Main {
 
@@ -18,17 +16,20 @@ public class Main {
 		
 		switch(prc) {
 		case "1":
-			ap1 a1 = new ap1(in, out);
+			Ap1 a1 = new Ap1(in, out);
+			a1.buclePrincipal();
 			break;
 		case "2":
-			ap2 a2 = new ap2(in, out);
+			Ap2 a2 = new Ap2(in, out);
+			a2.buclePrincipal();
 			break;
 		case "3":
-			ap3 a3 = new ap3(in, out);
+			Ap3 a3 = new Ap3(in, out);
+			a3.buclePrincipal();
 			break;
 
 		case "4":
-			ap4 a4 = new ap4(in, out);
+			Ap4 a4 = new Ap4(in, out);
 			break;
 		default:
 			//error

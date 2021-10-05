@@ -3,23 +3,23 @@ package Player;
 import java.util.ArrayList;
 
 
-public class mano  {
+public class Mano {
 
-    public ArrayList<carta> cartas;
-    public Ranking besthand;
-    public ArrayList<carta>cartasG;
-    public carta cartasS;
-    public int drawF;
-    public int drawS;
-    public int pareja;
-    public int trio;
+    private ArrayList<Carta> cartas;
+    private Ranking besthand;
+    private ArrayList<Carta>cartasG;
+    private Carta cartasS;
+    private int drawF;
+    private int drawS;
+    private int pareja;
+    private int trio;
 
 
     public Ranking getBesthand() {
         return besthand;
     }
 
-    public ArrayList<carta>getCartasG() {
+    public ArrayList<Carta>getCartasG() {
         return cartasG;
     }
 
@@ -29,16 +29,16 @@ public class mano  {
         this.besthand = besthand;
     }
 
-    public void setCartasG(ArrayList<carta>cartasG) {
+    public void setCartasG(ArrayList<Carta>cartasG) {
         this.cartasG = cartasG;
     }
 
 
-    public void setCartasS(carta cartasS) {
+    public void setCartasS(Carta cartasS) {
         this.cartasS = cartasS;
     }
 
-    public carta getCartasS() {
+    public Carta getCartasS() {
         return cartasS;
     }
 
@@ -67,7 +67,7 @@ public class mano  {
     public void setTrio(int trio){this.trio=trio;}
 
 
-    public mano (ArrayList<carta> cartas) {
+    public Mano(ArrayList<Carta> cartas) {
         this.cartas = cartas;
         this.besthand=Ranking.HIGHCARD;
         this.cartasG=null;
@@ -79,7 +79,7 @@ public class mano  {
 
     }
 
-    public mano () {
+    public Mano() {
         this.cartas = new ArrayList<>();
         this.besthand=Ranking.HIGHCARD;
         this.cartasG=null;
@@ -89,15 +89,15 @@ public class mano  {
     }
 
 
-    public ArrayList<carta> getCartas() {
+    public ArrayList<Carta> getCartas() {
         return cartas;
     }
 
-    public void setCartas(ArrayList<carta> cartas) {
+    public void setCartas(ArrayList<Carta> cartas) {
         this.cartas = cartas;
     }
 
-    public void addCarta(carta carta) {
+    public void addCarta(Carta carta) {
         cartas.add(carta);
     }
 
@@ -110,7 +110,14 @@ public class mano  {
         return aux;
     }
 
-    public mano compareMano(mano x){
+    public String toStringCartasG() {
+        String aux = new String();
+        for(int i = 0; i < cartasG.size() ;++i)
+            aux += cartasG.get(i).toString();
+        return aux;
+    }
+
+    public Mano compareMano(Mano x){
     //
         if(x.getBesthand()==Ranking.HIGHCARD){
 
@@ -126,6 +133,9 @@ public class mano  {
                 if(this.cartasS.getValor()>x.getCartasS().getValor())
                     return this;
 
+                else if(this.cartasS.getValor()==x.getCartasS().getValor()){
+                    return  this.compareOnebyOne(x);
+                }
                 else
                     return x;
 
@@ -145,11 +155,7 @@ public class mano  {
 
                 else if(this.cartasG.get(1).getValor()==x.getCartasG().get(1).getValor()){
 
-                    if(this.cartasS.getValor()>x.getCartasS().getValor())
-                        return this;
-
-                    else
-                        return x;
+                    return  compareOnebyOne(x);
                 }
 
                 else{
@@ -169,6 +175,10 @@ public class mano  {
 
                 if(this.cartasS.getValor()>x.getCartasS().getValor())
                     return this;
+
+                else if(this.cartasS.getValor()==x.getCartasS().getValor()){
+                    return  this.compareOnebyOne(x);
+                }
 
                 else return x;
 
@@ -220,10 +230,7 @@ public class mano  {
             }
             else if (this.cartasG.get(3).getValor()==x.getCartasG().get(3).getValor()){
 
-                if(this.cartasS.getValor()>x.getCartasS().getValor())
-                    return this;
-
-                else return x;
+                return compareOnebyOne(x);
 
             }
             else return x;
@@ -244,52 +251,32 @@ public class mano  {
     }
 
     //asquerosidad si se encuentra una mejor manera pls
-    private mano compareOnebyOne(mano x){
-        if(this.cartasS.getValor()>x.getCartasS().getValor()){
-            return this;
-        }
-        else if(this.cartasS.getValor()==x.getCartasS().getValor()){
+    private Mano compareOnebyOne(Mano x){
+        int i= x.getCartas().size()-1;
+        boolean manoT=false,manoX=false;
+        while(i >= 0 && !manoT && !manoX){
 
-            if(this.cartas.get(3).getValor()>x.cartas.get(3).getValor()){
-                return this;
-            }
-            else if (this.cartas.get(3).getValor()==x.cartas.get(3).getValor()){
+            if(this.getCartas().get(i).getValor() > x.getCartas().get(i).getValor())
+                manoT=true;
 
-                if(this.cartas.get(2).getValor()>x.cartas.get(2).getValor()){
-                    return this;
-                }
+            else if (this.getCartas().get(i).getValor() < x.getCartas().get(i).getValor())
+                manoX=true;
 
-                else if(this.cartas.get(2).getValor()==x.cartas.get(2).getValor()){
-
-                    if(this.cartas.get(1).getValor()>x.cartas.get(1).getValor()){
-                        return this;
-                    }
-
-                    else if(this.cartas.get(1).getValor()==x.cartas.get(1).getValor()){
-
-                        if(this.cartas.get(0).getValor()>x.cartas.get(0).getValor())
-                            return this;
-
-                        else
-                            return x;
-                    }
-
-                    else
-                        return x;
-
-
-                }
-
-                else
-                    return x;
-
-            }
             else
-                return x;
-
+                 i--;
         }
-        else
+
+        if(manoT)
+            return this;
+
+        else if(manoX)
             return x;
+
+        else
+            return  this;
+
     }
+
+
 
 }

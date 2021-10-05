@@ -4,37 +4,37 @@ import java.util.ArrayList;
 
 public class Partida {
 
-    public ArrayList<carta> mesa;
-    public ArrayList<mano> jugadores;
-    public int nJug;
+    private ArrayList<Carta> mesa;
+    private ArrayList<Mano> jugadores;
+    private int nJug;
 
     public Partida () {
-        jugadores = new ArrayList<mano>();
+        jugadores = new ArrayList<Mano>();
     }
 
-    public Partida (ArrayList<carta> mesa, ArrayList<mano> jugadores, int nJug) {
+    public Partida (ArrayList<Carta> mesa, ArrayList<Mano> jugadores, int nJug) {
         this.jugadores = jugadores;
         this.mesa = mesa;
         this.nJug = nJug;
     }
 
-    public ArrayList<carta> getMesa() {
+    public ArrayList<Carta> getMesa() {
         return mesa;
     }
 
-    public void setMesa(ArrayList<carta> mesa) {
+    public void setMesa(ArrayList<Carta> mesa) {
         this.mesa = mesa;
     }
 
-    public ArrayList<mano> getJugadores() {
+    public ArrayList<Mano> getJugadores() {
         return jugadores;
     }
 
-    public void setJugadores(ArrayList<mano> jugadores) {
+    public void setJugadores(ArrayList<Mano> jugadores) {
         this.jugadores = jugadores;
     }
 
-    public void addManoJugador(mano mano) {
+    public void addManoJugador(Mano mano) {
         jugadores.add(mano);
     }
 

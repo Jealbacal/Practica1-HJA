@@ -1,12 +1,12 @@
 package Player;
 
-public class carta implements Comparable<Object> {
+public class Carta implements Comparable<Object> {
 
-    public int valor;
-    public String palo;
-    public String representacion;
+    private int valor;
+    private String palo;
+    private String representacion;
 
-    public carta(String valor, String palo) {
+    public Carta(String valor, String palo) {
 
         switch(valor) {
             case"A":
@@ -59,12 +59,12 @@ public class carta implements Comparable<Object> {
     @Override
     public int compareTo(Object o) {
         try {
-            if (o.getClass() == carta.class) {
+            if (o.getClass() == Carta.class) {
 
-                if (((carta) o).valor > this.valor)
+                if (((Carta) o).valor > this.valor)
                     return -1;
 
-                else if (((carta) o).valor < this.valor)
+                else if (((Carta) o).valor < this.valor)
                     return 1;
 
                 else
