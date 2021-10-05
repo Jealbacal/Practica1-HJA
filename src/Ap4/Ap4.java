@@ -18,7 +18,8 @@ public class Ap4 extends Ap2 {
 
 	public Ap4(String in, String out) {
 		super(in,out);
-
+		this.in=in;
+		this.out=out;
 	}
 
 	@Override

@@ -15,7 +15,8 @@ public class Ap2 extends Ap1 {
 
 	public Ap2(String in, String out) {
 		super(in,out);
-
+		this.in=in;
+		this.out=out;
 	}
 
 	@Override
@@ -195,8 +196,9 @@ public class Ap2 extends Ap1 {
 					writer.write("-Draw: Straight Gutshot");
 					writer.append("\n");
 				}
-				writer.append("\n");
+
 			}
+			writer.append("\n");
 		}
 		catch (IOException ioException) {
 			ioException.printStackTrace();

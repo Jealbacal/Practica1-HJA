@@ -8,7 +8,6 @@ public class Mano {
     private ArrayList<Carta> cartas;
     private Ranking besthand;
     private ArrayList<Carta>cartasG;
-    private Carta cartasS;
     private int drawF;
     private int drawS;
     private int pareja;
@@ -33,14 +32,6 @@ public class Mano {
         this.cartasG = cartasG;
     }
 
-
-    public void setCartasS(Carta cartasS) {
-        this.cartasS = cartasS;
-    }
-
-    public Carta getCartasS() {
-        return cartasS;
-    }
 
     public void setDrawF(int drawF) {
         this.drawF = drawF;
@@ -71,7 +62,6 @@ public class Mano {
         this.cartas = cartas;
         this.besthand=Ranking.HIGHCARD;
         this.cartasG=null;
-        this.cartasS=null;
         this.drawS=-1;
         this.drawF=-1;
 
@@ -83,7 +73,6 @@ public class Mano {
         this.cartas = new ArrayList<>();
         this.besthand=Ranking.HIGHCARD;
         this.cartasG=null;
-        this.cartasS=null;
         this.drawS=-1;
         this.drawF=-1;
     }
@@ -130,14 +119,8 @@ public class Mano {
                 return this;
             }
             else if (this.getPareja()==x.getPareja()){
-                if(this.cartasS.getValor()>x.getCartasS().getValor())
-                    return this;
 
-                else if(this.cartasS.getValor()==x.getCartasS().getValor()){
-                    return  this.compareOnebyOne(x);
-                }
-                else
-                    return x;
+                return  this.compareOnebyOne(x);
 
             }
             else
@@ -173,14 +156,8 @@ public class Mano {
             }
             else if (this.getTrio()==x.getTrio()){
 
-                if(this.cartasS.getValor()>x.getCartasS().getValor())
-                    return this;
+                return  this.compareOnebyOne(x);
 
-                else if(this.cartasS.getValor()==x.getCartasS().getValor()){
-                    return  this.compareOnebyOne(x);
-                }
-
-                else return x;
 
             }
             else return x;

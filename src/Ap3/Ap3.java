@@ -22,7 +22,8 @@ public class Ap3 extends Ap2 {
 
 	public Ap3(String in, String out) {
 		super(in,out);
-
+		this.in=in;
+		this.out=out;
 	}
 
 	@Override
