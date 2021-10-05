@@ -1,11 +1,18 @@
 package Ap4;
 
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
+
+import javax.swing.text.StyledEditorKit.ForegroundAction;
+
 import java.util.*;
 import Ap1.ap1;
 import Ap2.ap2;
@@ -35,13 +42,14 @@ public class ap4 {
 				 *  .substring() con indices indiscriminadamente*/
 
 				/* Este string recoge las cartas del jugador, mas adelante si
-				 * hay clase jugador se puede aÃ±adir como atributo*/
+				 * hay clase jugador se puede añadir como atributo*/
+				//AhAc8s5h;4;2h2d2c2s
 				String s_h_cards = act.substring(0, 8);
 
 				// Desde donde empiezan hasta el final del string
 				String s_c_Cards = act.substring(11);
 
-				// Por ahora es una varible local, Â¿Habria que hacer algo con ella?
+				// Por ahora es una varible local, ¿Habria que hacer algo con ella?
 				// Es equivalente a .length() del ArrayList de cartas de
 				// la instancia de c_cards de mano.
 				int number_of_c_cards = Integer.parseInt(act.substring(9, 10));
@@ -54,14 +62,14 @@ public class ap4 {
 				//c_cards = community_cards = las cartas de la mesa
 
 				// Lo pongo en una unica lista porque las tiene que combinar indistintamente
-				ArrayList<carta> h_cards = read_cards(s_h_cards + s_c_Cards);
+				ArrayList<carta> h_cards = read_cards(s_h_cards);
 				ArrayList<carta> c_cards = read_cards(s_c_Cards);
 
 
 				ArrayList<mano> combs = new ArrayList<mano>();
 				ArrayList<carta> manoAct = new ArrayList<carta>
 						(Arrays.asList(h_cards.get(0), h_cards.get(0), h_cards.get(0), h_cards.get(0), h_cards.get(0)));
-				combinaciones(h_cards, manoAct, 0, h_cards.size() - 1, 0, combs);
+				combinaciones(h_cards, manoAct, 0, h_cards.size() - 1, 0, 2, combs);
 				//h_cards.clear();
 
 				ArrayList<mano> combsF = new ArrayList<mano>();
@@ -71,18 +79,21 @@ public class ap4 {
 				//Maximo absoluto, la mano a imprimir
 				mano maxAbs = null;
 				for( mano aux : combs) {
-					ArrayList<carta> resultList =
-							(ArrayList<carta>) Stream.concat(aux.getCartas().stream(), c_cards.stream()).collect(Collectors.toList());
-					combinaciones(manoAct, resultList, 0, 2+Integer.parseInt(act.substring(9, 10)), 0, combsF);
-					//Aqui se llama a evalua de ap1 y se guarda en un array
-					mano max = evaluaCombinaciones(combs,number_of_c_cards);
+					
+					combinaciones(c_cards, manoAct, 0, 2+c_cards.size() - 1, 0, 3, combsF);
+					
+					for (mano aux2 : combsF) {
+						aux2.setCartas((ArrayList<carta>) Stream.concat(aux.getCartas().stream(), aux2.getCartas().stream()).collect(Collectors.toList()));
+
+					}
+					mano max = evaluaCombinaciones(combsF,number_of_c_cards);
 					if(maxAbs == null)
 						maxAbs = max;
 					else if (max.getBesthand().biggerThan(maxAbs.getBesthand()))
 						maxAbs = max;
 				}
 				//imprimir maxAbs
-				System.out.println("fgh");
+				print_out(maxAbs,act);
 
 			}
 		} catch (Exception ex) {
@@ -103,27 +114,25 @@ public class ap4 {
 
 		return hand;
 	}
-
-
+	
 	public void combinaciones(ArrayList<carta> cartas, ArrayList<carta> manoAct,
-			int ini, int fin, int i, ArrayList<mano> combs) {
+			int ini, int fin, int i,int size, ArrayList<mano> combs) {
 
-		if (i == 5) {
+		if (i == size) {
 			mano aux= new mano();
 
-			for(int k=0;k<manoAct.size();k++){
+			for(int k=0;k<size;k++){
 				aux.addCarta(manoAct.get(k));
 			}
 
 			combs.add(aux);
-		} else
-			for (int j = ini; j <= fin && fin - j + 1 >= 5 - i; j++) {
+		}
+		else
+			for (int j = ini; j <= fin && fin - j + 1 >= size - i && j < size; j++) {
 				manoAct.set(i, cartas.get(j));
-				combinaciones(cartas, manoAct, j + 1, fin, i + 1, combs);
+				combinaciones(cartas, manoAct, j + 1, fin, i + 1, size, combs);
 			}
 	}
-
-
 
 	public mano evaluaCombinaciones(ArrayList<mano> combs,int number_of_c_cards){
 		mano max = null;
@@ -143,8 +152,6 @@ public class ap4 {
 		}
 		return max;
 	}
-
-
 
 	public void evalua(mano mano,int number_of_c_cards) {
 
@@ -348,4 +355,87 @@ public class ap4 {
 		}
 
 	}
+	
+	private void print_out(mano maxAbs, String act) throws IOException {
+	        
+	        FileWriter fw = new FileWriter("out.txt",true);
+	        BufferedWriter bw = new BufferedWriter(fw);
+	        PrintWriter out = new PrintWriter(bw);
+	        
+	        out.println(act);
+	        
+	        if (maxAbs.getBesthand() == Ranking.PAIR) {
+	            out.write("-Best hand: Pair of " + serialize(maxAbs.getCartasG().get(0).toString()) + " with " + maxAbs.toString());
+	            out.append("\n");
+	        } else if (maxAbs.getBesthand() == Ranking.TWOPAIR) {
+	            out.write("-Best hand: Two-Pair  " + " with " + maxAbs.toString());
+	            out.append("\n");
+	        } else if (maxAbs.getBesthand() == Ranking.THREEOFAKIND) {
+	            out.write("-Best hand: Three of a kind of " + serialize(maxAbs.getCartasG().get(0).toString()) +  " with " + maxAbs.toString());
+	            out.append("\n");
+	        } else if (maxAbs.getBesthand() == Ranking.STRAIGHT) {
+	            out.write("-Best hand: Straight " + " with " + maxAbs.toString());
+	            out.append("\n");
+	        } else if (maxAbs.getBesthand() == Ranking.FLUSH) {
+	            out.write("-Best hand: Flush " + " with " + maxAbs.toString());
+	            out.append("\n");
+	        } else if (maxAbs.getBesthand() == Ranking.FULLHOUSE) {
+	            out.write("-Best hand: Full house " + " with " + maxAbs.toString());
+	            out.append("\n");
+	        } else if (maxAbs.getBesthand() == Ranking.FOUROFAKIND) {
+	            out.write("-Best hand: Four of a kind of " + serialize(maxAbs.getCartasG().get(0).toString()) + " with " + maxAbs.toString());
+	            out.append("\n");
+	        } else if (maxAbs.getBesthand() == Ranking.STRAIGHTFLUSH) {
+	            out.write("-Best hand: Straight Flush " + " with " + maxAbs.toString());
+	            out.append("\n");
+	        } else {
+	            out.write("-Best hand: High card " + maxAbs.cartas.get(4).toString() + " with " + maxAbs.toString());
+	            out.append("\n");
+	
+	        }
+	
+	        if(maxAbs.getDrawF()==0) {
+	            out.write("-Draw: Flush");
+	            out.append("\n");
+	        }
+	
+	        if(maxAbs.getDrawS()==0){
+	            out.write("-Draw: Straight Open-Ended");
+	            out.append("\n");
+	        }
+	
+	        else if (maxAbs.getDrawS()==1) {
+	            out.write("-Draw: Straight Gutshot");
+	            out.append("\n");
+	        }
+	        out.append("\n");
+	        
+	        out.close();
+	    }
+	
+	public String serialize(String ganadora) {
+	
+		switch (ganadora.charAt(0)){
+	
+			case 'A' :
+				return "Aces";
+	
+			case 'K':
+				return  "K's";
+	
+			case 'Q':
+				return  "Q's";
+	
+			case 'J':
+				return  "J's";
+	
+			case 'T':
+				return  "T's";
+	
+			default:
+				return  ganadora.charAt(0)+"'s";
+	
+		}
+	}
+	
 }
