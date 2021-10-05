@@ -30,6 +30,7 @@ public class Main {
 
 		case "4":
 			Ap4 a4 = new Ap4(in, out);
+			a4.buclePrincipal();
 			break;
 		default:
 			//error
