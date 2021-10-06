@@ -58,10 +58,11 @@ public class Ap1 {
 		int almacenai=0;
 		int trebol=0;
 		int corazones=0;
-		int almhuecardo=0;
+		int almhuecardo= -1;
+		int almhueco= -1;
 		int diamantes=0;
 		int picas=0;
-		boolean straight=true,color=true,proyectoE=false;
+		boolean straight=true,color=true,proyectoE=false,expected=false;
 		ArrayList<Ranking> comb = new ArrayList<>();
 		ArrayList<Carta> combG=new ArrayList<>();
 
@@ -136,41 +137,16 @@ public class Ap1 {
 				corazones++;
 			}
 
-
-
-			//Miramos si los valores solo tienen una diferencia de 1 entre si para comprobar si ahy escalera y guradamos el valor de i para saber por donde seria
-			//el draw y con pEscalera me aseguro que solo falta una carta para hacer la escalera
-//			if(mano.getCartas().get(j).getValor()!=mano.getCartas().get(j+1).getValor()-1 ) {
-//
-//				straight = false;
-//				//miramos si hay un hueco tipo 4h6c donde podria ir una entre medias
-//				if ((mano.getCartas().get(j+1).getValor() - mano.getCartas().get(j ).getValor()) == 2) {
-//					hueco++;
-//					pEscalera++;
-//					almacenai=j;
-//
-//				}
-//				//si hay un hueco y estamos en el final esa carta podria susutituirse por una que entrara en el hueco
-//				else if(hueco==1 && j==3  ){
-//					hueco++;
-//					//pEscalera=1;
-//					pEscalera++;
-//					almacenai=j-1;
-//
-//				}//caso de que solo haya uno diferente por ejemplo
-//				else{
-//
-//					pEscalera++;
-//					almacenai=j;
-//				}
-//			}
-			//////////////////////////////////////
 			if (j+1 < mano.getCartas().size() && mano.getCartas().get(j).getValor() != mano.getCartas().get(j + 1).getValor() - 1) {
 
 				straight = false;
 				//miramos si hay un hueco tipo 4h6c donde podria ir una entre medias
 
-				if(hueco==1 && j==3  ){
+//				if(j+2 < mano.getCartas().size() && mano.getCartas().get(j).getValor()+1==mano.getCartas().get(j+2).getValor()){
+//					expected=true;
+//				}
+
+				if(hueco==1 && j==3 &&pEscalera==1  ){
 
 					pEscalera++;
 					almacenai=j-1;
@@ -181,6 +157,9 @@ public class Ap1 {
 					hueco++;
 					pEscalera++;
 					almacenai=j;
+
+					if(j==0 || j==3)
+						almhueco=j;
 
 					if(j==3 && pEscalera==2 )
 						almacenai=j-1;
@@ -197,6 +176,7 @@ public class Ap1 {
 
 				}
 
+
 				else {
 
 					pEscalera++;
@@ -205,7 +185,7 @@ public class Ap1 {
 				}
 
 				//caso especial del 'A' con la escalera '2,3,4,5' //
-				if (mano.getCartas().get(j).getValor() == 5 && mano.getCartas().get(j + 1).getValor() == 14 && pEscalera == -1 && j == 3) {
+				if (mano.getCartas().get(j).getValor() == 5 && mano.getCartas().get(j + 1).getValor() == 14 && pEscalera == 1 && j == 3) {
 
 					straight = true;
 					pEscalera = 0;
@@ -217,10 +197,31 @@ public class Ap1 {
 			j++;
 		}
 
-//		if((hueco==2) &&  pEscalera==2)
-//			proyectoE=true;
-		if(huecardo > 1 )
+
+		if((mano.getCartas().get(4).getValor()==14 && mano.getCartas().get(0).getValor()==2 && pEscalera==3 && hueco==1  && mano.getCartas().get(1).getValor() <= 5 &&
+				mano.getCartas().get(2).getValor()<=5)
+				|| (mano.getCartas().get(4).getValor()==14 && mano.getCartas().get(0).getValor()==2 && (pEscalera==2 || hueco==2 || pEscalera==1)  && mano.getCartas().get(1).getValor() <= 5 &&
+				mano.getCartas().get(2).getValor()<=5)){
+
+			proyectoE=true;
+			almacenai=2;
+		}
+
+		else if(mano.getCartas().get(0).getValor()==3 && mano.getCartas().get(4).getValor()==14 && mano.getCartas().get(1).getValor() <= 5 &&
+				mano.getCartas().get(2).getValor()<=5 &&pEscalera==2 ) {
+
+			proyectoE = true;
+			almacenai=2;
+
+		}
+
+		else if(huecardo > 1 )
 			proyectoE=false;
+
+//		else if(expected && pEscalera==1) {
+//			proyectoE = true;
+//			almacenai=0;
+//		}
 
 		//3h4dJdQhKs
 		else if((pEscalera==1 && huecardo==0) || (pEscalera==1 && huecardo==1 && (almacenai==0 || almacenai==3)) )
@@ -237,18 +238,14 @@ public class Ap1 {
 		else if(hueco==1 && pEscalera==2 && huecardo==1 && (almhuecardo==0 || almhuecardo==3) )
 			proyectoE=true;
 
+		else if (hueco==1 && pEscalera==2 && huecardo==0)
+			proyectoE=true;
+
+		else if(hueco==2 && pEscalera==2 && (almhueco==0 || almhueco==3))
+			proyectoE=true;
 			//234KA 2456A
 
 		//2335A   2334A 2333A
-		else if((mano.getCartas().get(4).getValor()==14 && mano.getCartas().get(0).getValor()==2 && pEscalera==3 && hueco==1 )
-				|| (mano.getCartas().get(4).getValor()==14 && mano.getCartas().get(0).getValor()==2 && pEscalera==2 && mano.getCartas().get(1).getValor() <= 5 &&
-				mano.getCartas().get(2).getValor()<=5)){
-
-			proyectoE=true;
-			almacenai=2;
-		}
-
-
 		if( picas==4 || corazones==4 || diamantes==4 || trebol==4 ){//draw de c
 			mano.setDrawF(0);
 

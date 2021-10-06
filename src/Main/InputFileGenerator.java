@@ -7,8 +7,8 @@ import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Random;
 
-import Player.carta;
-import Player.mano;
+import Player.Carta;
+import Player.Mano;
 
 public class InputFileGenerator {
 	
@@ -202,7 +202,7 @@ public class InputFileGenerator {
 			//Concatena cartas en la mano	
 			r_hand = r_hand.concat(r_card); 
 			
-			//Añade a dealt_cards para ver si esta repetida
+			//Aï¿½ade a dealt_cards para ver si esta repetida
 			dealt_cards.add(r_card);
 			
 		}
