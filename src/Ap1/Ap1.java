@@ -58,6 +58,7 @@ public class Ap1 {
 		int almacenai=0;
 		int trebol=0;
 		int corazones=0;
+		int almhuecardo=0;
 		int diamantes=0;
 		int picas=0;
 		boolean straight=true,color=true,proyectoE=false;
@@ -171,20 +172,18 @@ public class Ap1 {
 
 				if(hueco==1 && j==3  ){
 
-
-					//pEscalera=1;
 					pEscalera++;
 					almacenai=j-1;
 
 				}
 
-				if(j==3 && mano.getCartas().get(0).getValor()==2 && mano.getCartas().get(4).getValor()==14 && mano.getCartas().get(3).getValor()==5)
-					pEscalera--;
-
 				else if ((mano.getCartas().get(j + 1).getValor() - mano.getCartas().get(j).getValor()) == 2) {
 					hueco++;
 					pEscalera++;
-					almacenai = j-1;
+					almacenai=j;
+
+					if(j==3 && pEscalera==2 )
+						almacenai=j-1;
 
 
 				}
@@ -193,9 +192,7 @@ public class Ap1 {
 					huecardo++;
 					pEscalera++;
 					almacenai = j;
-
-					if(j==0|| j==3)
-						huecardo--;
+					almhuecardo=j;
 
 
 				}
@@ -222,35 +219,30 @@ public class Ap1 {
 
 //		if((hueco==2) &&  pEscalera==2)
 //			proyectoE=true;
-//
-//		else if(pEscalera==1)
-//			proyectoE=true;
-		//////////////////////
-		//fallo algo entre medias
-		//23789 23456 23336
-		if(pEscalera==1 && mano.getCartas().get(4).getValor()-mano.getCartas().get(0).getValor()==4)
+		if(huecardo > 1 )
+			proyectoE=false;
+
+		//3h4dJdQhKs
+		else if((pEscalera==1 && huecardo==0) || (pEscalera==1 && huecardo==1 && (almacenai==0 || almacenai==3)) )
+			proyectoE=true;
+			//////////////////////
+			//fallo algo entre medias
+			//23789 23456 23336
+		else if(pEscalera==1 && mano.getCartas().get(4).getValor()-mano.getCartas().get(0).getValor()==4)
 			proyectoE=true;
 			//falla primero
 			//26789
-		else if(pEscalera==1 && almacenai==0)
-			proyectoE=true;
-			//falla ultimo 45679
-		else if(pEscalera==1 && almacenai==3)
-			proyectoE=true;
 			//2 fallos entre medias per hueco
 			//23356 567JK 23568
-		else if(hueco==1 && pEscalera==2 && huecardo==0)
+		else if(hueco==1 && pEscalera==2 && huecardo==1 && (almhuecardo==0 || almhuecardo==3) )
 			proyectoE=true;
 
 			//234KA 2456A
-		else if(mano.getCartas().get(4).getValor()==14  && pEscalera==1 && huecardo==0){
-			proyectoE=true;
-			almacenai=0;
-		}
+
 		//2335A   2334A 2333A
-		else if((mano.getCartas().get(4).getValor()==14 && mano.getCartas().get(0).getValor()==2 && pEscalera==2 && hueco==1)
+		else if((mano.getCartas().get(4).getValor()==14 && mano.getCartas().get(0).getValor()==2 && pEscalera==3 && hueco==1 )
 				|| (mano.getCartas().get(4).getValor()==14 && mano.getCartas().get(0).getValor()==2 && pEscalera==2 && mano.getCartas().get(1).getValor() <= 5 &&
-				mano.getCartas().get(2).getValor()<=5 && mano.getCartas().get(3).getValor()<=5)){
+				mano.getCartas().get(2).getValor()<=5)){
 
 			proyectoE=true;
 			almacenai=2;
