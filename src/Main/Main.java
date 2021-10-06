@@ -13,7 +13,7 @@ public class Main {
 		prc = new String(args[0]);
 		in = new String(args[1]);
 		out = new String(args[2]);
-		
+		if(args.length > 0)
 		switch(prc) {
 		case "1":
 			Ap1 a1 = new Ap1(in, out);
@@ -34,6 +34,10 @@ public class Main {
 			break;
 		default:
 			//error
+		}
+		else {
+			Window_Main GUI = new Window_Main();
+			
 		}
 	}
 }
